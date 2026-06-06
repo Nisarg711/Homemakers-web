@@ -9,6 +9,7 @@ const SignIn = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    contactNo: '',
     password: '',
     confirmPassword: '',
     userType: 'individual',
@@ -47,6 +48,11 @@ const SignIn = () => {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
+    }
+    if (!formData.contactNo.trim()) {
+      newErrors.contactNo = 'Contact number is required';
+    } else if (!/^\d{10}$/.test(formData.contactNo.replace(/\D/g, ''))) {
+      newErrors.contactNo = 'Please enter a valid 10-digit phone number';
     }
     if (!formData.password) {
       newErrors.password = 'Password is required';
@@ -88,16 +94,16 @@ const SignIn = () => {
 
     try {
       // TODO: Backend API call to register user
-      // const response = await fetch('/api/auth/register', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // });
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      console.log('API response:', response);
+      if (!response.ok) {
+        throw new Error('Registration failed');
+      }
       
-      // if (!response.ok) {
-      //   throw new Error('Registration failed');
-      // }
-
       console.log('Form submitted:', formData);
       
       // Redirect to dashboard after successful registration
@@ -173,6 +179,27 @@ const SignIn = () => {
             />
             {errors.email && (
               <p className="text-red-600 text-xs mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          {/* Contact Number Field */}
+          <div>
+            <label htmlFor="contactNo" className="block text-sm font-medium text-gray-700 mb-1">
+              Contact Number
+            </label>
+            <input
+              type="tel"
+              id="contactNo"
+              name="contactNo"
+              value={formData.contactNo}
+              onChange={handleInputChange}
+              placeholder="Enter 10-digit phone number"
+              className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition ${
+                errors.contactNo ? 'border-red-500' : 'border-gray-300'
+              }`}
+            />
+            {errors.contactNo && (
+              <p className="text-red-600 text-xs mt-1">{errors.contactNo}</p>
             )}
           </div>
 
@@ -341,8 +368,8 @@ const SignIn = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
             Already have an account?{' '}
-            <a href="/auth/login" className="text-blue-600 hover:text-blue-700 font-medium transition">
-              Sign In
+            <a href="/auth/login" className="text-indigo-950 hover:text-blue-700 font-medium transition">
+              Log in here
             </a>
           </p>
         </div>
