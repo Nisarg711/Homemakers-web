@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, User, Mail, Lock, Building2, MapPin, Phone } from 'lucide-react';
+import { signIn } from "next-auth/react";
 
 const SignIn = () => {
   const router = useRouter();
@@ -99,15 +100,26 @@ const SignIn = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      console.log('API response:', response);
+      const data=await response.json();
+      console.log('API response:', data);  // now log the parsed data
       if (!response.ok) {
         throw new Error('Registration failed');
       }
       
-      console.log('Form submitted:', formData);
-      
-      // Redirect to dashboard after successful registration
-      router.push('/dashboard');
+      const signInResult = await signIn("credentials", {
+      email: formData.email,
+      password: formData.password, // use original password, not hashed
+      //// plain text — authorize() will bcrypt.compare internally
+      redirect: false,
+    });
+
+      if (signInResult?.error) {
+      // Registration worked but sign in failed — send to login
+      router.push("/login");
+    } else {
+      // Both worked — go straight to dashboard
+      router.push("/dashboard");
+    }
     } catch (error) {
       console.error('Registration error:', error);
       setErrors((prev) => ({

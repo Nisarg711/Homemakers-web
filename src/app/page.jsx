@@ -1,5 +1,12 @@
-import SignIn from '@/components/(auth)/signin';
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return <SignIn />;
+export default async function Home() {
+  const session = await auth();
+  
+  if (session) {
+    redirect("/dashboard");
+  } else {
+    redirect("/login");
+  }
 }

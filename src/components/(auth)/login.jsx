@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff } from 'lucide-react';
-
+import { signIn } from "next-auth/react";
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -54,23 +54,20 @@ const Login = () => {
     }
 
     setIsLoading(true);
-
     try {
-      // TODO: Backend API call to authenticate user
-      // const response = await fetch('/api/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // });
-      
-      // if (!response.ok) {
-      //   throw new Error('Login failed');
-      // }
-
+      const result= await signIn("credentials",{
+        email:formData.email,
+        password:formData.password,
+        redirect:false,
+      });
+      console.log('SignIn result:', result);
+          if (result?.error) {
+            throw new Error(result.error);
+            } else {
+              console.log('Login successful');
+                window.location.href = "/dashboard";
+            }
       console.log('Form submitted:', formData);
-      
-      // Redirect to dashboard after successful login
-      router.push('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       setErrors((prev) => ({
