@@ -12,6 +12,11 @@ import UserCard from '@/components/UserCard';
 import FeatureCard from '@/components/FeatureCard';
 
 export default function DashboardPage() {
+
+  //useSession doesn't go to the DB. 
+  // It calls GET /api/auth/session which NextAuth handles 
+  // automatically — it reads the cookie, decrypts it, 
+  // runs your session() callback, and returns the result as JSON.
   const { data: session, status } = useSession();
   const router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState('All India');
@@ -24,8 +29,8 @@ export default function DashboardPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500 text-lg">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-dark-bg">
+        <p className="text-dark-text-secondary text-lg">Loading...</p>
       </div>
     );
   }
@@ -63,7 +68,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-dark-bg">
       <Navbar onLocationChange={setSelectedLocation} />
 
       {/* Hero Section */}
@@ -71,12 +76,12 @@ export default function DashboardPage() {
         className="relative h-64 flex items-center justify-center overflow-hidden bg-cover bg-center"
         style={{ backgroundImage: 'url(./cover.png)' }}
       >
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-black/60" />
         <div className="text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Find Your Perfect Home
           </h1>
-          <p className="text-lg text-blue-100">
+          <p className="text-lg text-dark-text-secondary">
             Welcome back, {session.user.name}
           </p>
         </div>
@@ -90,8 +95,8 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Recommended for You</h2>
-          <p className="text-gray-600 mb-8">Properties based on your preferences</p>
+          <h2 className="text-3xl font-bold text-dark-text mb-2">Recommended for You</h2>
+          <p className="text-dark-text-secondary mb-8">Properties based on your preferences</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {propertyRecommendations.map((property) => (
               <PropertyCard key={property.id} property={property} />
@@ -100,7 +105,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Top Articles</h2>
+          <h2 className="text-2xl font-bold text-dark-text mb-6">Top Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {topArticles.map((article) => (
               <ArticleCard key={article.id} article={article} />
@@ -109,7 +114,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Demand in {selectedLocation}</h2>
+          <h2 className="text-2xl font-bold text-dark-text mb-6">Demand in {selectedLocation}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <DemandCard category={{ title: 'Apartments', subtitle: 'Most searched localities for Apartments' }} locations={demandData.apartments} />
             <DemandCard category={{ title: 'Plots', subtitle: 'Most searched societies for Plots' }} locations={demandData.plots} />
@@ -118,7 +123,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Our Users</h2>
+          <h2 className="text-2xl font-bold text-dark-text mb-6">Our Users</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {userData.map((user) => (
               <UserCard key={user.id} userType={user} />
@@ -127,7 +132,7 @@ export default function DashboardPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Why Homemakers?</h2>
+          <h2 className="text-2xl font-bold text-dark-text mb-6">Why Homemakers?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature) => (
               <FeatureCard key={feature.id} feature={feature} />

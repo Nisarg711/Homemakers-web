@@ -46,13 +46,13 @@ const Navbar = ({ onLocationChange }) => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+    <nav className="bg-dark-bg-secondary/95 border-b border-dark-border shadow-dark-lg sticky top-0 z-50 backdrop-blur-xs">
       <div className="px-6 py-4 flex items-center justify-between">
         {/* Left Section - Logo and Location */}
         <div className="flex items-center gap-8">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer">
-            <span className="text-xl font-bold text-gray-900">HomeMakers</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">HomeMakers</span>
           </div>
 
           {/* Location Selector */}
@@ -60,7 +60,7 @@ const Navbar = ({ onLocationChange }) => {
             <button
               onMouseEnter={() => setShowCityDropdown(true)}
               onMouseLeave={() => setShowCityDropdown(false)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition text-gray-700 font-medium"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-dark-bg-hover transition text-dark-text-secondary font-medium"
             >
               
               <span>{selectedCity}</span>
@@ -70,17 +70,17 @@ const Navbar = ({ onLocationChange }) => {
               <div
                 onMouseEnter={() => setShowCityDropdown(true)}
                 onMouseLeave={() => setShowCityDropdown(false)}
-                className="absolute top-full mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 p-4 left-0 z-50"
+                className="absolute top-full mt-2 w-72 bg-dark-bg-tertiary rounded-lg shadow-dark-xl border border-dark-border p-4 left-0 z-50"
               >
                 {/* Search Bar */}
                 <div className="mb-4 relative">
-                  <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
+                  <Search size={18} className="absolute left-3 top-2.5 text-dark-text-muted" />
                   <input
                     type="text"
                     placeholder="Search cities..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400 text-sm"
+                    className="w-full pl-10 pr-4 py-2 border border-dark-border rounded-lg bg-dark-bg-secondary text-dark-text focus:outline-none focus:ring-2 focus:ring-accent-primary placeholder:text-dark-text-muted text-sm"
                     autoFocus
                   />
                 </div>
@@ -94,15 +94,15 @@ const Navbar = ({ onLocationChange }) => {
                         onClick={() => handleCitySelect(city)}
                         className={`w-full text-left px-3 py-2 rounded-lg transition ${
                           selectedCity === city
-                            ? 'bg-blue-100 text-blue-700 font-semibold'
-                            : 'text-gray-700 hover:bg-gray-100'
+                            ? 'bg-accent-primary text-white font-semibold'
+                            : 'text-dark-text-secondary hover:bg-dark-bg-hover'
                         }`}
                       >
                         {city}
                       </button>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-sm text-center py-4">No cities found</p>
+                    <p className="text-dark-text-muted text-sm text-center py-4">No cities found</p>
                   )}
                 </div>
               </div>
@@ -116,19 +116,19 @@ const Navbar = ({ onLocationChange }) => {
           <div className="flex items-center gap-6">
             <a
               href="#"
-              className="text-gray-700 font-medium hover:text-blue-600 transition"
+              className="text-dark-text-secondary font-medium hover:text-accent-primary transition"
             >
               Buy
             </a>
             <a
               href="#"
-              className="text-gray-700 font-medium hover:text-blue-600 transition"
+              className="text-dark-text-secondary font-medium hover:text-accent-primary transition"
             >
               Sell
             </a>
             <a
               href="#"
-              className="text-gray-700 font-medium hover:text-blue-600 transition"
+              className="text-dark-text-secondary font-medium hover:text-accent-primary transition"
             >
               About us
             </a>
@@ -137,9 +137,9 @@ const Navbar = ({ onLocationChange }) => {
           {/* Profile Icon */}
           <button
             onClick={handleProfileClick}
-            className="p-2 rounded-full hover:bg-gray-100 transition"
+            className="p-2 rounded-full hover:bg-dark-bg-hover transition"
           >
-            <User size={24} className="text-gray-700" />
+            <User size={24} className="text-dark-text-secondary" />
           </button>
         </div>
       </div>

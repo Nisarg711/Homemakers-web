@@ -18,19 +18,19 @@ const PropertyCard = ({ property = {} }) => {
   } = property;
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition duration-300">
+    <div className="bg-dark-bg-secondary rounded-lg shadow-dark-lg border border-dark-border overflow-hidden hover:border-accent-primary/40 hover:shadow-glow transition duration-300">
       {/* Image Section */}
-      <div className="relative h-48 bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center overflow-hidden group">
-        <p className="text-gray-400">Property Image</p>
+      <div className="relative h-48 bg-gradient-to-br from-dark-bg-tertiary via-dark-bg-secondary to-accent-primary/10 flex items-center justify-center overflow-hidden group">
+        <p className="text-dark-text-muted">Property Image</p>
 
         {/* Wishlist Button */}
         <button
           onClick={() => setIsFavorite(!isFavorite)}
-          className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition z-10"
+          className="absolute top-3 right-3 p-2 bg-dark-bg-secondary/90 rounded-full shadow-dark-md hover:bg-dark-bg-hover transition z-10 border border-dark-border"
         >
           <Heart
             size={20}
-            className={isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400'}
+            className={isFavorite ? 'text-red-400 fill-red-400' : 'text-dark-text-muted'}
           />
         </button>
       </div>
@@ -38,43 +38,43 @@ const PropertyCard = ({ property = {} }) => {
       {/* Content Section */}
       <div className="p-4">
         {/* Price */}
-        <div className="text-2xl font-bold text-indigo-700 mb-2">{price}</div>
+        <div className="text-2xl font-bold text-accent-primary mb-2">{price}</div>
 
         {/* Title */}
-        <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
+        <h3 className="text-lg font-semibold text-dark-text mb-1 line-clamp-2">
           {title}
         </h3>
 
         {/* Location */}
-        <div className="flex items-center gap-2 text-gray-600 text-sm mb-4">
-          <MapPin size={16} className="text-red-500" />
+        <div className="flex items-center gap-2 text-dark-text-secondary text-sm mb-4">
+          <MapPin size={16} className="text-accent-primary" />
           <span className="line-clamp-1">{location}</span>
         </div>
 
         {/* Details */}
-        <div className="grid grid-cols-3 gap-3 mb-4 py-4 border-t border-b border-gray-200">
+        <div className="grid grid-cols-3 gap-3 mb-4 py-4 border-t border-b border-dark-border">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
+            <div className="flex items-center justify-center gap-1 text-dark-text-secondary mb-1">
               <Bed size={16} />
             </div>
-            <p className="text-xs text-gray-600">{bedrooms} Beds</p>
+            <p className="text-xs text-dark-text-secondary">{bedrooms} Beds</p>
           </div>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
+            <div className="flex items-center justify-center gap-1 text-dark-text-secondary mb-1">
               <Bath size={16} />
             </div>
-            <p className="text-xs text-gray-600">{bathrooms} Baths</p>
+            <p className="text-xs text-dark-text-secondary">{bathrooms} Baths</p>
           </div>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
+            <div className="flex items-center justify-center gap-1 text-dark-text-secondary mb-1">
               <Maximize2 size={16} />
             </div>
-            <p className="text-xs text-gray-600">{area}</p>
+            <p className="text-xs text-dark-text-secondary">{area}</p>
           </div>
         </div>
 
         {/* View More Button */}
-        <button className="w-full bg-indigo-700 hover:bg-indigo-800 text-white font-semibold py-2 px-4 rounded-lg transition">
+        <button className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2 px-4 rounded-lg transition shadow-dark-md">
           View Details
         </button>
       </div>

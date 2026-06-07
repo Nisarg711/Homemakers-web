@@ -2,6 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Refined Dark Theme Color Variables */
+:root {
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #12121a;
+  --color-bg-tertiary: #16161f;
+  --color-bg-hover: #1e1e2a;
+  --color-border: #22222f;
+  --color-border-light: #2a2a38;
+  --color-text-primary: #e8e8eb;
+  --color-text-secondary: #a0a0a8;
+  --color-text-muted: #7a7a82;
+  --color-accent-primary: #3b82f6;
+  --color-accent-secondary: #1e40af;
+  --color-accent-light: #60a5fa;
+}
+
+html {
+  background: var(--color-bg-primary);
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: 'Segoe UI', Trebuchet MS, sans-serif;
+  line-height: 1.6;
+}
+
+/* Smooth transitions for interactive elements */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom scrollbar for a refined look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a48;
 }

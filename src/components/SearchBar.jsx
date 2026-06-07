@@ -19,10 +19,10 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-full bg-white shadow-lg rounded-lg overflow-hidden mx-auto max-w-6xl -mt-8 relative z-20">
+    <div className="w-full bg-dark-bg-secondary/95 shadow-dark-xl rounded-lg overflow-hidden mx-auto max-w-6xl -mt-8 relative z-20 border border-dark-border backdrop-blur-xs">
       <div className="flex items-center px-6 py-4 gap-4">
         {/* Filter Buttons */}
-        <div className="flex gap-2 border-r border-gray-300 pr-6">
+        <div className="flex gap-2 border-r border-dark-border pr-6">
           {[
             { id: 'buy', label: 'Buy' },
             { id: 'rent', label: 'Rent' },
@@ -33,8 +33,8 @@ const SearchBar = () => {
               onClick={() => setActiveFilter(filter.id)}
               className={`px-4 py-2 rounded-lg font-semibold text-sm transition ${
                 activeFilter === filter.id
-                  ? 'bg-indigo-950 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-accent-primary text-white shadow-dark-md'
+                  : 'bg-dark-bg-tertiary text-dark-text-secondary hover:bg-dark-bg-hover'
               }`}
             >
               {filter.label}
@@ -50,14 +50,14 @@ const SearchBar = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            className="w-full focus:outline-none placeholder:text-gray-500 text-gray-900"
+            className="w-full bg-transparent focus:outline-none placeholder:text-dark-text-muted text-dark-text"
           />
         </div>
 
         {/* Location Button (Icon Only) */}
         <button
           onClick={handleLocationClick}
-          className="p-2 hover:bg-gray-100 rounded-lg transition text-blue-400"
+          className="p-2 hover:bg-dark-bg-hover rounded-lg transition text-accent-primary"
         >
           <MapPin size={22} />
         </button>
@@ -65,7 +65,7 @@ const SearchBar = () => {
         {/* Search Button (Icon Only) */}
         <button
           onClick={handleSearch}
-          className="p-2 bg-indigo-950 hover:bg-indigo-800 text-white rounded-lg transition"
+          className="p-2 bg-accent-primary hover:bg-accent-dark text-white rounded-lg transition shadow-dark-md"
         >
           <Search size={22} />
         </button>

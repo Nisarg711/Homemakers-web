@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Eye, EyeOff, User, Mail, Lock, Building2, MapPin, Phone } from 'lucide-react';
 import { signIn } from "next-auth/react";
 
@@ -115,7 +116,7 @@ const SignIn = () => {
 
       if (signInResult?.error) {
       // Registration worked but sign in failed — send to login
-      router.push("/login");
+      router.push("/");
     } else {
       // Both worked — go straight to dashboard
       router.push("/dashboard");
@@ -132,21 +133,20 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-dark-bg flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated Background Elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-blue-950/10 pointer-events-none"></div>
       
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border border-blue-100 relative z-10">
+      <div className="w-full max-w-md bg-dark-bg-secondary/95 rounded-2xl shadow-dark-xl p-8 border border-dark-border relative z-10 backdrop-blur-xs">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">Create Account</h1>
-          <p className="text-gray-600">Join Homemakers and start your journey</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent mb-2">Create Account</h1>
+          <p className="text-dark-text-secondary">Join Homemakers and start your journey</p>
         </div>
 
         {/* Error Message */}
         {errors.submit && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+          <div className="mb-4 p-3 bg-red-950/40 border border-red-900/60 rounded-lg text-red-300 text-sm">
             {errors.submit}
           </div>
         )}
@@ -154,7 +154,7 @@ const SignIn = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username Field */}
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="username" className="block text-sm font-medium text-dark-text-secondary mb-1">
               Username
             </label>
             <input
@@ -164,18 +164,18 @@ const SignIn = () => {
               value={formData.username}
               onChange={handleInputChange}
               placeholder="Choose a username"
-              className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition ${
-                errors.username ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition ${
+                errors.username ? 'border-red-900/60' : 'border-dark-border'
               }`}
             />
             {errors.username && (
-              <p className="text-red-600 text-xs mt-1">{errors.username}</p>
+              <p className="text-red-400 text-xs mt-1">{errors.username}</p>
             )}
           </div>
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-dark-text-secondary mb-1">
               Email Address
             </label>
             <input
@@ -185,18 +185,18 @@ const SignIn = () => {
               value={formData.email}
               onChange={handleInputChange}
               placeholder="Enter your email"
-              className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition ${
+                errors.email ? 'border-red-900/60' : 'border-dark-border'
               }`}
             />
             {errors.email && (
-              <p className="text-red-600 text-xs mt-1">{errors.email}</p>
+              <p className="text-red-400 text-xs mt-1">{errors.email}</p>
             )}
           </div>
 
           {/* Contact Number Field */}
           <div>
-            <label htmlFor="contactNo" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="contactNo" className="block text-sm font-medium text-dark-text-secondary mb-1">
               Contact Number
             </label>
             <input
@@ -206,18 +206,18 @@ const SignIn = () => {
               value={formData.contactNo}
               onChange={handleInputChange}
               placeholder="Enter 10-digit phone number"
-              className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition ${
-                errors.contactNo ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition ${
+                errors.contactNo ? 'border-red-900/60' : 'border-dark-border'
               }`}
             />
             {errors.contactNo && (
-              <p className="text-red-600 text-xs mt-1">{errors.contactNo}</p>
+              <p className="text-red-400 text-xs mt-1">{errors.contactNo}</p>
             )}
           </div>
 
           {/* User Type Field */}
           <div>
-            <label htmlFor="userType" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="userType" className="block text-sm font-medium text-dark-text-secondary mb-1">
               Account Type
             </label>
             <select
@@ -225,11 +225,11 @@ const SignIn = () => {
               name="userType"
               value={formData.userType}
               onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition font-medium appearance-none cursor-pointer"
+              className="w-full px-4 py-2 border border-dark-border rounded-lg bg-dark-bg-primary text-dark-text focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition font-medium appearance-none cursor-pointer"
             >
-              <option value="individual" className="bg-white text-gray-900 font-semibold">Individual Buyer/Renter</option>
-              <option value="firm" className="bg-white text-gray-900 font-semibold">Firm</option>
-              <option value="agent" className="bg-white text-gray-900 font-semibold">Real Estate Agent</option>
+              <option value="individual" className="bg-dark-bg-primary text-dark-text font-semibold">Individual Buyer/Renter</option>
+              <option value="firm" className="bg-dark-bg-primary text-dark-text font-semibold">Firm</option>
+              <option value="agent" className="bg-dark-bg-primary text-dark-text font-semibold">Real Estate Agent</option>
             </select>
           </div>
 
@@ -237,7 +237,7 @@ const SignIn = () => {
           {formData.userType === 'firm' && (
             <>
               <div>
-                <label htmlFor="officeName" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="officeName" className="block text-sm font-medium text-dark-text-secondary mb-1">
                   Office Name
                 </label>
                 <input
@@ -247,17 +247,17 @@ const SignIn = () => {
                   value={formData.officeName}
                   onChange={handleInputChange}
                   placeholder="Enter office name"
-                  className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition ${
-                    errors.officeName ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition ${
+                    errors.officeName ? 'border-red-900/60' : 'border-dark-border'
                   }`}
                 />
                 {errors.officeName && (
-                  <p className="text-red-600 text-xs mt-1">{errors.officeName}</p>
+                  <p className="text-red-400 text-xs mt-1">{errors.officeName}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="officeAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="officeAddress" className="block text-sm font-medium text-dark-text-secondary mb-1">
                   Office Address
                 </label>
                 <textarea
@@ -267,17 +267,17 @@ const SignIn = () => {
                   onChange={handleInputChange}
                   placeholder="Enter office address"
                   rows="3"
-                  className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition resize-none ${
-                    errors.officeAddress ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition resize-none ${
+                    errors.officeAddress ? 'border-red-900/60' : 'border-dark-border'
                   }`}
                 />
                 {errors.officeAddress && (
-                  <p className="text-red-600 text-xs mt-1">{errors.officeAddress}</p>
+                  <p className="text-red-400 text-xs mt-1">{errors.officeAddress}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="officeContact" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="officeContact" className="block text-sm font-medium text-dark-text-secondary mb-1">
                   Office Contact Number
                 </label>
                 <input
@@ -287,12 +287,12 @@ const SignIn = () => {
                   value={formData.officeContact}
                   onChange={handleInputChange}
                   placeholder="Enter 10-digit phone number"
-                  className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition ${
-                    errors.officeContact ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition ${
+                    errors.officeContact ? 'border-red-900/60' : 'border-dark-border'
                   }`}
                 />
                 {errors.officeContact && (
-                  <p className="text-red-600 text-xs mt-1">{errors.officeContact}</p>
+                  <p className="text-red-400 text-xs mt-1">{errors.officeContact}</p>
                 )}
               </div>
             </>
@@ -300,7 +300,7 @@ const SignIn = () => {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-dark-text-secondary mb-1">
               Password
             </label>
             <div className="relative">
@@ -311,14 +311,14 @@ const SignIn = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Create a password"
-                className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition pr-10 ${
-                  errors.password ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition pr-10 ${
+                  errors.password ? 'border-red-900/60' : 'border-dark-border'
                 }`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-text-muted hover:text-dark-text-secondary transition"
               >
                 {showPassword ? (
                   <EyeOff size={18} />
@@ -328,13 +328,13 @@ const SignIn = () => {
               </button>
             </div>
             {errors.password && (
-              <p className="text-red-600 text-xs mt-1">{errors.password}</p>
+              <p className="text-red-400 text-xs mt-1">{errors.password}</p>
             )}
           </div>
 
           {/* Confirm Password Field */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-dark-text-secondary mb-1">
               Confirm Password
             </label>
             <div className="relative">
@@ -345,14 +345,14 @@ const SignIn = () => {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Confirm your password"
-                className={`w-full px-4 py-2 border rounded-lg bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 transition pr-10 ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-2 border rounded-lg bg-dark-bg-primary text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary focus:bg-dark-bg-tertiary transition pr-10 ${
+                  errors.confirmPassword ? 'border-red-900/60' : 'border-dark-border'
                 }`}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-text-muted hover:text-dark-text-secondary transition"
               >
                 {showConfirmPassword ? (
                   <EyeOff size={18} />
@@ -362,7 +362,7 @@ const SignIn = () => {
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-red-600 text-xs mt-1">{errors.confirmPassword}</p>
+              <p className="text-red-400 text-xs mt-1">{errors.confirmPassword}</p>
             )}
           </div>
 
@@ -370,7 +370,7 @@ const SignIn = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-blue-400 disabled:to-indigo-400 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-lg"
+            className="w-full bg-accent-primary hover:bg-accent-dark disabled:bg-dark-bg-tertiary text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-dark-lg"
           >
             {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
@@ -378,11 +378,11 @@ const SignIn = () => {
 
         {/* Footer */}
         <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
+          <p className="text-dark-text-secondary text-sm">
             Already have an account?{' '}
-            <a href="/auth/login" className="text-indigo-950 hover:text-blue-700 font-medium transition">
+            <Link href="/login" className="text-accent-light hover:text-accent-primary font-medium transition">
               Log in here
-            </a>
+            </Link>
           </p>
         </div>
       </div>

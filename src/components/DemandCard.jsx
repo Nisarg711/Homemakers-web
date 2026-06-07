@@ -10,10 +10,10 @@ const DemandCard = ({ category = {}, locations = [] }) => {
   } = category;
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+    <div className="bg-dark-bg-secondary rounded-lg shadow-dark-lg border border-dark-border p-6 hover:border-accent-primary/40 hover:shadow-glow transition">
       {/* Header */}
-      <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-sm text-gray-600 mb-4">{subtitle}</p>
+      <h3 className="text-lg font-semibold text-dark-text mb-1">{title}</h3>
+      <p className="text-sm text-dark-text-secondary mb-4">{subtitle}</p>
 
       {/* Top Locations List */}
       <div className="space-y-3">
@@ -24,16 +24,16 @@ const DemandCard = ({ category = {}, locations = [] }) => {
           return (
             <div key={index} className="flex items-center gap-3">
               {/* Rank Number */}
-              <span className="text-sm font-bold text-gray-700 min-w-6">#{index + 1}</span>
+              <span className="text-sm font-bold text-accent-primary min-w-6">#{index + 1}</span>
 
               {/* Location Name & Progress Bar */}
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-900">{location}</span>
+                  <span className="text-sm font-medium text-dark-text">{location}</span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-dark-bg-tertiary rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-400 to-indigo-500 rounded-full transition-all"
+                    className="h-full bg-gradient-to-r from-accent-primary to-accent-secondary rounded-full transition-all"
                     style={{ width: `${progressWidth}%` }}
                   />
                 </div>

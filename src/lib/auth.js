@@ -11,6 +11,11 @@ export const authConfig = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+      /*
+      When user submits the login form, 
+      signIn("credentials", { email, password }) is called. 
+      NextAuth runs your authorize() function:
+       */
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
@@ -38,6 +43,26 @@ export const authConfig = {
     }),
   ],
   callbacks: {
+
+    /*
+    Right after authorize() returns, NextAuth calls your jwt() callback:
+jsasync jwt({ token, user }) {
+  // user is only available THIS ONE TIME — right after login
+  // after this, user is undefined on every other call
+  if (user) {
+    token.id = user.id;     // UUID
+    token.role = user.role; // "Individual
+
+
+    NextAuth then:
+
+Takes that token object
+Encrypts it using your AUTH_SECRET
+Stores it as a cookie named authjs.session-token in the browser
+
+The DB is never touched again after this point.
+
+     */
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
