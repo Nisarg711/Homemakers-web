@@ -13,7 +13,7 @@ const FeatureCard = ({ feature = {}, index = 0 }) => {
     <div className="flex flex-col items-center text-center">
       {/* Number */}
       <div className="text-5xl font-bold bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent mb-4">
-        {index + 1}
+        {id}
       </div>
 
       {/* Title */}

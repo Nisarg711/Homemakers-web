@@ -1,8 +1,15 @@
+'use client';
 import Navbar from '@/components/Navbar';
+import { useState, useEffect } from 'react';
 import { User, Mail, MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-
+import { useSession } from 'next-auth/react';
+import { signOut } from "next-auth/react";
 export default function ProfilePage() {
+  const { data: session, status } = useSession();
+  useEffect(()=>{
+    console.log(session);
+  },[status])
   return (
     <div className="min-h-screen bg-dark-bg">
       <Navbar />
@@ -22,7 +29,7 @@ export default function ProfilePage() {
               <User size={40} className="text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-dark-text mb-2">User Profile</h1>
+              <h1 className="text-3xl font-bold text-dark-text mb-2">Your Profile</h1>
               <p className="text-dark-text-secondary">Manage your account information</p>
             </div>
           </div>
@@ -33,7 +40,7 @@ export default function ProfilePage() {
             <div>
               <label className="block text-sm font-medium text-dark-text-secondary mb-2">Username</label>
               <div className="p-3 bg-dark-bg-primary rounded-lg text-dark-text border border-dark-border">
-                username_placeholder
+                {session?.user?.name || 'User Name'}
               </div>
             </div>
 
@@ -42,7 +49,7 @@ export default function ProfilePage() {
               <label className="block text-sm font-medium text-dark-text-secondary mb-2">Email Address</label>
               <div className="flex items-center gap-3 p-3 bg-dark-bg-primary rounded-lg text-dark-text border border-dark-border">
                 <Mail size={18} className="text-dark-text-muted" />
-                user@example.com
+                {session?.user?.email || 'user@example.com'}
               </div>
             </div>
 
@@ -50,7 +57,7 @@ export default function ProfilePage() {
             <div>
               <label className="block text-sm font-medium text-dark-text-secondary mb-2">Account Type</label>
               <div className="p-3 bg-dark-bg-primary rounded-lg text-dark-text border border-dark-border">
-                Individual
+                {session?.user?.role || 'Role'}
               </div>
             </div>
 
@@ -75,7 +82,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Logout */}
-          <button className="w-full mt-4 bg-red-950/30 hover:bg-red-950/50 text-red-400 hover:text-red-300 font-semibold py-2 px-4 rounded-lg transition border border-red-900/50">
+          <button onClick={()=>{signOut()}} className="w-full mt-4 bg-red-950/30 hover:bg-red-950/50 text-red-400 hover:text-red-300 font-semibold py-2 px-4 rounded-lg transition border border-red-900/50">
             Logout
           </button>
         </div>

@@ -2,21 +2,17 @@
 
 import React, { useState } from 'react';
 import { MapPin, Search } from 'lucide-react';
-
+import {useGeolocation} from '@/hooks/useGeolocation';
 const SearchBar = () => {
   const [activeFilter, setActiveFilter] = useState('buy');
   const [searchQuery, setSearchQuery] = useState('');
-
-  const handleLocationClick = () => {
-    // TODO: Implement live location fetching from backend
-    console.log('Location button clicked - Backend implementation pending');
-  };
 
   const handleSearch = () => {
     console.log('Search query:', searchQuery);
     console.log('Filter:', activeFilter);
     // TODO: Implement search functionality
   };
+const { location, error, loading, getLocation } = useGeolocation();
 
   return (
     <div className="w-full bg-dark-bg-secondary/95 shadow-dark-xl rounded-lg overflow-hidden mx-auto max-w-6xl -mt-8 relative z-20 border border-dark-border backdrop-blur-xs">
@@ -56,7 +52,17 @@ const SearchBar = () => {
 
         {/* Location Button (Icon Only) */}
         <button
-          onClick={handleLocationClick}
+          onClick={()=>{
+            getLocation();
+            if(location)
+            {
+              console.log('User location:', location);
+            }
+            else
+            {
+              console.log(error)
+            }
+          }}
           className="p-2 hover:bg-dark-bg-hover rounded-lg transition text-accent-primary"
         >
           <MapPin size={22} />

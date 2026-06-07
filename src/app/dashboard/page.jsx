@@ -10,8 +10,11 @@ import ArticleCard from '@/components/ArticleCard';
 import DemandCard from '@/components/DemandCard';
 import UserCard from '@/components/UserCard';
 import FeatureCard from '@/components/FeatureCard';
+import {useGeolocation} from '@/hooks/useGeolocation';
 
 export default function DashboardPage() {
+   
+
 
   //useSession doesn't go to the DB. 
   // It calls GET /api/auth/session which NextAuth handles 
