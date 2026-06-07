@@ -62,12 +62,14 @@ const Login = () => {
         redirect:false,
       });
       console.log('SignIn result:', result);
-          if (result?.error) {
-            throw new Error(result.error);
-            } else {
-              console.log('Login successful');
-                window.location.href = "/dashboard";
-            }
+           if (result?.ok) {
+      window.location.replace("/dashboard"); // replace instead of href
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        submit: "Invalid email or password",
+      }));
+    }
       console.log('Form submitted:', formData);
     } catch (error) {
       console.error('Login error:', error);
