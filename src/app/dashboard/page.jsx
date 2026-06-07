@@ -10,12 +10,8 @@ import ArticleCard from '@/components/ArticleCard';
 import DemandCard from '@/components/DemandCard';
 import UserCard from '@/components/UserCard';
 import FeatureCard from '@/components/FeatureCard';
-import {useGeolocation} from '@/hooks/useGeolocation';
 
 export default function DashboardPage() {
-   
-
-
   //useSession doesn't go to the DB. 
   // It calls GET /api/auth/session which NextAuth handles 
   // automatically — it reads the cookie, decrypts it, 
@@ -23,12 +19,36 @@ export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState('All India');
+  const [news, setNews] = useState([]);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
     }
+   
   }, [status, router]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('/api/news');
+        if (response.ok) {
+          const data = await response.json();
+          // Extract results array from the Tavily response
+          const newsResults = data.response?.results || [];
+          setNews(newsResults);
+        } else {
+          console.error('Failed to fetch news');
+          setNews([]);
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error);
+        setNews([]);
+      }
+    };
+
+    fetchNews();
+  }, [status]);
 
   if (status === 'loading') {
     return (
@@ -46,11 +66,8 @@ export default function DashboardPage() {
     { id: 3, title: 'property 3', location: 'Indiranagar, Bangalore', price: '₹0', bedrooms: 2, bathrooms: 2, area: '1,100 sq.ft' },
   ];
 
-  const topArticles = [
-    { id: 1, title: 'Article 1', description: 'description 1', date: 'Dec 28, 2024' },
-    { id: 2, title: 'Article 2', description: 'description 2', date: 'Dec 25, 2024' },
-    { id: 3, title: 'Article 3', description: 'description 3', date: 'Dec 20, 2024' },
-  ];
+  // Display only top 3 articles from fetched news
+  const topArticles = Array.isArray(news) ? news.slice(0, 3) : [];
 
   const demandData = {
     apartments: ['location1', 'location2', 'location3', 'location4', 'location5'],
@@ -110,9 +127,15 @@ export default function DashboardPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-dark-text mb-6">Top Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {topArticles.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
+            {topArticles.length > 0 ? (
+              topArticles.map((article, index) => (
+                <ArticleCard key={article.url || index} article={article} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8 text-dark-text-secondary">
+                <p>Loading latest articles...</p>
+              </div>
+            )}
           </div>
         </section>
 
