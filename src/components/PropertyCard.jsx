@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Heart, MapPin, Bed, Bath, Maximize2 } from 'lucide-react';
 
 const PropertyCard = ({ property = {} }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const router = useRouter();
 
   const {
     id = 1,
+    apn = 1,
     title = 'Modern Apartment',
     location = 'Downtown Area',
     price = '₹45,00,000',
@@ -15,7 +18,12 @@ const PropertyCard = ({ property = {} }) => {
     bathrooms = 2,
     area = '1,200 sq.ft',
     image = null,
+    availableFor = 'sale'
   } = property;
+
+  const handleViewDetails = () => {
+    router.push(`/property/${apn}`);
+  };
 
   return (
     <div className="bg-dark-bg-secondary rounded-lg shadow-dark-lg border border-dark-border overflow-hidden hover:border-accent-primary/40 hover:shadow-glow transition duration-300">
@@ -44,7 +52,8 @@ const PropertyCard = ({ property = {} }) => {
         <h3 className="text-lg font-semibold text-dark-text mb-1 line-clamp-2">
           {title}
         </h3>
-
+        {/* Available For */}
+        <p className="text-sm text-dark-text-secondary mb-2 capitalize">For {availableFor}</p>
         {/* Location */}
         <div className="flex items-center gap-2 text-dark-text-secondary text-sm mb-4">
           <MapPin size={16} className="text-accent-primary" />
@@ -74,7 +83,10 @@ const PropertyCard = ({ property = {} }) => {
         </div>
 
         {/* View More Button */}
-        <button className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2 px-4 rounded-lg transition shadow-dark-md">
+        <button
+          onClick={handleViewDetails}
+          className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2 px-4 rounded-lg transition shadow-dark-md"
+        >
           View Details
         </button>
       </div>

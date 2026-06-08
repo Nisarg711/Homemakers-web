@@ -24,6 +24,7 @@ export default function DashboardPage() {
   const [news, setNews] = useState([]);
   const { location, error, loading, getLocation } = useGeolocation();
   const [userAddress, setUserAddress] = useState(null);
+  const [nearbyProperties, setNearbyProperties] = useState([]);
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
@@ -72,17 +73,24 @@ export default function DashboardPage() {
             },
           body: JSON.stringify(userAddress)
         })
-        console.log("Response from properties API: ", res)
+        const data=await res.json();
+        console.log("Response from properties API: ")
+        if(data?.count > 0) {
+          console.log("Nearby properties setting ", data.properties)
+          setNearbyProperties(data.properties);
+        }
       }
       catch(error)
       {
-
+        console.error("Error fetching nearby properties: ", error);
       }
     }
       fetchnearbyproperties(userAddress);
   }, [userAddress]);
 
-
+useEffect(() => {
+    console.log("Nearby properties: ", nearbyProperties);
+}, [nearbyProperties]);
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -123,7 +131,7 @@ export default function DashboardPage() {
 
   // Display only top 3 articles from fetched news
   const topArticles = Array.isArray(news) ? news.slice(0, 3) : [];
-
+  const topnearbyProperties = Array.isArray(nearbyProperties) ? nearbyProperties.slice(0, 3) : [];
   const demandData = {
     apartments: ['location1', 'location2', 'location3', 'location4', 'location5'],
     plots: ['location1', 'location2', 'location3', 'location4', 'location5'],
@@ -173,10 +181,24 @@ export default function DashboardPage() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <section className="mb-12">
           <h2 className="text-3xl font-bold text-dark-text mb-2">Recommended for You</h2>
-          <p className="text-dark-text-secondary mb-8">Properties based on your preferences</p>
+          <p className="text-dark-text-secondary mb-8">Properties based on your entered location</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {propertyRecommendations.map((property) => (
+            {/* {propertyRecommendations.map((property) => (
               <PropertyCard key={property.id} property={property} />
+            ))} */}
+
+            {topnearbyProperties.length > 0 && topnearbyProperties.map((property) => (
+              <PropertyCard key={property.apn} property={
+                {
+                  "title": property.title,
+                  "location": `${property.localAddress}, ${property.city}, ${property.state}`,
+                  "price": "₹" + (property.rent?.monthlyRent || property.sell?.price || 'Price on request'),
+                  "bedrooms": 'N/A',
+                  "bathrooms": 'N/A',
+                  "area": `${property.area} sq.ft`,
+                  "availableFor": property.availableFor,
+                }
+              } />
             ))}
           </div>
         </section>
