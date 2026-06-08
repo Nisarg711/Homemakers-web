@@ -123,11 +123,6 @@ useEffect(() => {
 
   if (!session) return null;
 
-  const propertyRecommendations = [
-    { id: 1, title: 'property 1', location: 'Bandra, Mumbai', price: '₹0', bedrooms: 3, bathrooms: 2, area: '1,500 sq.ft' },
-    { id: 2, title: 'property 2', location: 'Whitefield, Bangalore', price: '₹0', bedrooms: 4, bathrooms: 3, area: '3,200 sq.ft' },
-    { id: 3, title: 'property 3', location: 'Indiranagar, Bangalore', price: '₹0', bedrooms: 2, bathrooms: 2, area: '1,100 sq.ft' },
-  ];
 
   // Display only top 3 articles from fetched news
   const topArticles = Array.isArray(news) ? news.slice(0, 3) : [];
@@ -190,6 +185,7 @@ useEffect(() => {
             {topnearbyProperties.length > 0 && topnearbyProperties.map((property) => (
               <PropertyCard key={property.apn} property={
                 {
+                  "apn": property.apn,
                   "title": property.title,
                   "location": `${property.localAddress}, ${property.city}, ${property.state}`,
                   "price": "₹" + (property.rent?.monthlyRent || property.sell?.price || 'Price on request'),

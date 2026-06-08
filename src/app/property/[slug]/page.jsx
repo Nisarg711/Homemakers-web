@@ -331,38 +331,44 @@ export default function PropertyDetailPage() {
                 {activeTab === 'Point of Contact' && (
                   <div className="space-y-6">
                     {/* Agent Card */}
-                    <div className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-start gap-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center">
-                            <Users size={32} className="text-white" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <h4 className="text-lg font-bold text-dark-text">{property.agent.name}</h4>
-                              {property.agent.verified && (
-                                <span className="px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded border border-green-500/30 flex items-center gap-1">
-                                  <Award size={12} /> Verified
-                                </span>
-                              )}
+                    {property.agent ? (
+                      <div className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-start gap-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center">
+                              <Users size={32} className="text-white" />
                             </div>
-                            <p className="text-sm text-dark-text-secondary">{property.agent.role}</p>
-                            <p className="text-xs text-dark-text-secondary mt-1">Lic. No: {property.agent.licenseNo}</p>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="text-lg font-bold text-dark-text">{property.agent.name}</h4>
+                                {property.agent.verified && (
+                                  <span className="px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded border border-green-500/30 flex items-center gap-1">
+                                    <Award size={12} /> Verified
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm text-dark-text-secondary">{property.agent.role}</p>
+                              <p className="text-xs text-dark-text-secondary mt-1">Lic. No: {property.agent.licenseNo}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2 pt-4 border-t border-dark-border">
+                          <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
+                            <Phone size={18} />
+                            <span>{property.agent.contact}</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
+                            <Mail size={18} />
+                            <span>{property.agent.email}</span>
                           </div>
                         </div>
                       </div>
-
-                      <div className="space-y-2 pt-4 border-t border-dark-border">
-                        <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
-                          <Phone size={18} />
-                          <span>{property.agent.contact}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
-                          <Mail size={18} />
-                          <span>{property.agent.email}</span>
-                        </div>
+                    ) : (
+                      <div className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border">
+                        <p className="text-dark-text-secondary">No agent assigned for this property</p>
                       </div>
-                    </div>
+                    )}
 
                     {/* Owner Card */}
                     <div className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border">

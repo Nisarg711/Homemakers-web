@@ -22,7 +22,7 @@ const PropertyCard = ({ property = {} }) => {
   } = property;
 
   const handleViewDetails = () => {
-    router.push(`/property/${apn}`);
+    router.push(`/property/${property.apn}`);
   };
 
   return (
@@ -84,7 +84,7 @@ const PropertyCard = ({ property = {} }) => {
 
         {/* View More Button */}
         <button
-          onClick={handleViewDetails}
+          onClick={() => handleViewDetails()}
           className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2 px-4 rounded-lg transition shadow-dark-md"
         >
           View Details
