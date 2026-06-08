@@ -10,6 +10,8 @@ import ArticleCard from '@/components/ArticleCard';
 import DemandCard from '@/components/DemandCard';
 import UserCard from '@/components/UserCard';
 import FeatureCard from '@/components/FeatureCard';
+import { useGeolocation } from '@/hooks/useGeolocation';
+
 
 export default function DashboardPage() {
   //useSession doesn't go to the DB. 
@@ -20,13 +22,66 @@ export default function DashboardPage() {
   const router = useRouter();
   const [selectedLocation, setSelectedLocation] = useState('All India');
   const [news, setNews] = useState([]);
-
+  const { location, error, loading, getLocation } = useGeolocation();
+  const [userAddress, setUserAddress] = useState(null);
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
     }
    
   }, [status, router]);
+
+  useEffect(()=>{
+  console.log("Location: ", location)
+  async function fetchAddress(location)
+  {
+    if(location)
+  {
+    const res=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${location.lat}&lon=${location.lng}&format=json`,{
+      method:'GET',
+      headers: {
+          "User-Agent": "MyNextApp/1.0",
+          Accept: "application/json",
+        }
+    })
+    const data=await res.json();
+    console.log("Address: ", data.address)
+    if(data?.address)
+    {
+      setUserAddress(data.address);
+    }
+  }
+ }
+  fetchAddress(location);
+  
+},[location])
+
+ // later when backend ready:
+  useEffect(() => {
+    if (userAddress==null) {
+      return
+    }
+    async function fetchnearbyproperties(userAddress)
+    {
+      try{
+        console.log("Fetching nearby properties for location: ", userAddress)
+        const res=await fetch('/api/fetch/properties',{
+          method:'POST',
+          headers: {
+              "Content-Type": "application/json",
+            },
+          body: JSON.stringify(userAddress)
+        })
+        console.log("Response from properties API: ", res)
+      }
+      catch(error)
+      {
+
+      }
+    }
+      fetchnearbyproperties(userAddress);
+  }, [userAddress]);
+
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -109,7 +164,9 @@ export default function DashboardPage() {
 
       {/* Search Bar Section */}
       <div className="px-6 pb-12">
-        <SearchBar />
+        <SearchBar onLocationRequest={getLocation} location={location}
+        locationLoading={loading}
+        userAddress={userAddress} />
       </div>
 
       {/* Main Content */}

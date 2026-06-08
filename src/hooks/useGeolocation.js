@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 
 export function useGeolocation() {
   const [location, setLocation] = useState(null);
-  // location = { lat, lng } or null
-
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +42,7 @@ export function useGeolocation() {
         maximumAge: 300000,  // cache location for 5 minutes
       }
     );
+    console.log("Location: ", location)
   };
 
   return { location, error, loading, getLocation };

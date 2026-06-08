@@ -1,22 +1,20 @@
 'use client';
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MapPin, Search } from 'lucide-react';
-import {useGeolocation} from '@/hooks/useGeolocation';
-const SearchBar = () => {
+
+const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }) => {
   const [activeFilter, setActiveFilter] = useState('buy');
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = () => {
     console.log('Search query:', searchQuery);
     console.log('Filter:', activeFilter);
-    // TODO: Implement search functionality
   };
-const { location, error, loading, getLocation } = useGeolocation();
 
   return (
     <div className="w-full bg-dark-bg-secondary/95 shadow-dark-xl rounded-lg overflow-hidden mx-auto max-w-6xl -mt-8 relative z-20 border border-dark-border backdrop-blur-xs">
       <div className="flex items-center px-6 py-4 gap-4">
+        
         {/* Filter Buttons */}
         <div className="flex gap-2 border-r border-dark-border pr-6">
           {[
@@ -42,7 +40,11 @@ const { location, error, loading, getLocation } = useGeolocation();
         <div className="flex-1">
           <input
             type="text"
-            placeholder="Search by locality, project, or landmark"
+            placeholder={
+              userAddress
+                ? `${userAddress.suburb || userAddress.city || 'Your area'}`
+                : "Search by locality, project, or landmark"
+            }
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -50,25 +52,18 @@ const { location, error, loading, getLocation } = useGeolocation();
           />
         </div>
 
-        {/* Location Button (Icon Only) */}
+        {/* Location Button */}
         <button
-          onClick={()=>{
-            getLocation();
-            if(location)
-            {
-              console.log('User location:', location);
-            }
-            else
-            {
-              console.log(error)
-            }
-          }}
-          className="p-2 hover:bg-dark-bg-hover rounded-lg transition text-accent-primary"
+          onClick={onLocationRequest}
+          disabled={locationLoading}
+          className={`p-2 hover:bg-dark-bg-hover rounded-lg transition ${
+            location ? 'text-green-400' : 'text-accent-primary'
+          } disabled:opacity-50`}
         >
           <MapPin size={22} />
         </button>
 
-        {/* Search Button (Icon Only) */}
+        {/* Search Button */}
         <button
           onClick={handleSearch}
           className="p-2 bg-accent-primary hover:bg-accent-dark text-white rounded-lg transition shadow-dark-md"
@@ -76,6 +71,13 @@ const { location, error, loading, getLocation } = useGeolocation();
           <Search size={22} />
         </button>
       </div>
+
+      {/* Address display when location is detected */}
+      {userAddress && (
+        <div className="px-6 pb-2 text-xs text-green-400">
+          📍 {userAddress.suburb || userAddress.neighbourhood} {userAddress.city || userAddress.village}, {userAddress.state}, {userAddress.country}
+        </div>
+      )}
     </div>
   );
 };

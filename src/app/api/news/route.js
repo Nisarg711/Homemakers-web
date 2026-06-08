@@ -13,7 +13,6 @@ export const GET = async (request) => {
         const tavilykey= process.env.TAVILY_KEY
         const tvly = tavily({ apiKey: tavilykey });
         const response = await tvly.search("Give me only three (3) latest news about real estate in India");
-        console.log(response)
         return new Response(JSON.stringify({response}), {status: 200})
     }
     catch(error){
