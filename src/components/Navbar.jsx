@@ -4,38 +4,25 @@ import React, { useState } from 'react';
 import { MapPin, Search, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-const Navbar = ({ onLocationChange }) => {
+const Navbar = ({ locations = [], onLocationChange }) => {
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState('All India');
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const cities = [
-    'All India',
-    'Mumbai',
-    'Delhi',
-    'Bangalore',
-    'Hyderabad',
-    'Chennai',
-    'Kolkata',
-    'Pune',
-    'Ahmedabad',
-    'Jaipur',
-    'Lucknow',
-    'Chandigarh',
-    'Indore',
-    'Surat',
-    'Goa',
+  const locationOptions = [
+    { city: 'All India', state: '' },
+    ...locations,
   ];
 
-  const filteredCities = cities.filter((city) =>
-    city.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredLocations = locationOptions.filter((location) =>
+    `${location.city} ${location.state}`.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleCitySelect = (city) => {
-    setSelectedCity(city);
+  const handleCitySelect = (location) => {
+    setSelectedCity(location.city);
     if (onLocationChange) {
-      onLocationChange(city);
+      onLocationChange(location);
     }
     setShowCityDropdown(false);
     setSearchQuery('');
@@ -59,7 +46,7 @@ const Navbar = ({ onLocationChange }) => {
           <div className="relative">
             <button
               onMouseEnter={() => setShowCityDropdown(true)}
-              onMouseLeave={() => setShowCityDropdown(false)}
+              // onMouseLeave={() => setShowCityDropdown(false)}
               className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-dark-bg-hover transition text-dark-text-secondary font-medium"
             >
               
@@ -87,18 +74,21 @@ const Navbar = ({ onLocationChange }) => {
 
                 {/* Cities List */}
                 <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {filteredCities.length > 0 ? (
-                    filteredCities.map((city) => (
+                  {filteredLocations.length > 0 ? (
+                    filteredLocations.map((location) => (
                       <button
-                        key={city}
-                        onClick={() => handleCitySelect(city)}
+                        key={`${location.state}-${location.city}`}
+                        onClick={() => handleCitySelect(location)}
                         className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                          selectedCity === city
+                          selectedCity === location.city
                             ? 'bg-accent-primary text-white font-semibold'
                             : 'text-dark-text-secondary hover:bg-dark-bg-hover'
                         }`}
                       >
-                        {city}
+                        <span className="block">{location.city}</span>
+                        {location.state && (
+                          <span className="block text-xs opacity-70">{location.state}</span>
+                        )}
                       </button>
                     ))
                   ) : (

@@ -27,11 +27,21 @@ export default function DashboardPage() {
   const [nearbyProperties, setNearbyProperties] = useState([]);
   const [demandmap,setdemandmap]=useState({})
   const [demandData,setdemandData]=useState({});
-  //   const demandData = {
-  //   // apartments: ['location1', 'location2', 'location3', 'location4', 'location5'],
-  //   // Villas: ['location1', 'location2', 'location3', 'location4', 'location5'],
-  //   // IndependentHouse: ['location1', 'location2', 'location3', 'location4', 'location5'],
-  // };
+  const [cities,setcities]=useState([]);
+ 
+  useEffect(()=>{
+    const fetchcities=async()=>{
+      const res=await fetch('/api/fetch/locations',{
+        "method":"GET"
+      })
+      const data=await res.json();
+      console.log("City State Data: ",data);
+      setcities(data.locations);
+    }
+    fetchcities();
+  },[])
+
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
@@ -187,7 +197,10 @@ useEffect(()=>{
 
   return (
     <div className="min-h-screen bg-dark-bg">
-      <Navbar onLocationChange={setSelectedLocation} />
+      <Navbar
+        locations={cities}
+        onLocationChange={(location) => setSelectedLocation(location.city)}
+      />
 
       {/* Hero Section */}
       <div
