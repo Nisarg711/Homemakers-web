@@ -25,12 +25,19 @@ export default function DashboardPage() {
   const { location, error, loading, getLocation } = useGeolocation();
   const [userAddress, setUserAddress] = useState(null);
   const [nearbyProperties, setNearbyProperties] = useState([]);
+  const [demandmap,setdemandmap]=useState({})
+  const [demandData,setdemandData]=useState({});
+  //   const demandData = {
+  //   // apartments: ['location1', 'location2', 'location3', 'location4', 'location5'],
+  //   // Villas: ['location1', 'location2', 'location3', 'location4', 'location5'],
+  //   // IndependentHouse: ['location1', 'location2', 'location3', 'location4', 'location5'],
+  // };
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
     }
    
-  }, [status, router]);
+  }, [status, router])
 
   useEffect(()=>{
   console.log("Location: ", location)
@@ -90,7 +97,44 @@ export default function DashboardPage() {
 
 useEffect(() => {
     console.log("Nearby properties: ", nearbyProperties);
+   const citymap = nearbyProperties.reduce((acc, property) => {
+  const { type, city, district } = property;
+
+  acc[type] ??= {};
+  acc[type][city] ??= {};
+
+  acc[type][city][district] =
+    (acc[type][city][district] ?? 0) + 1;
+
+  return acc;
+}, {});
+    setdemandmap(citymap);
 }, [nearbyProperties]);
+useEffect(()=>{
+  if(demandmap!={})
+  {
+const data={}
+for (const [type, cities] of Object.entries(demandmap)) {
+  data[type] = Object.entries(cities)
+    .flatMap(([city, districts]) =>
+      Object.entries(districts).map(([district, count]) => ({
+        location: `${district}, ${city}`,
+        count,
+      }))
+    )
+    .sort((a, b) => b.count - a.count)
+    .map(item => item.location);
+}
+setdemandData(data)
+  }
+},[demandmap])
+
+
+useEffect(()=>{
+  console.log("Demand Data: Indep ",demandData["Independent House"])
+},[demandData])
+
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -127,11 +171,7 @@ useEffect(() => {
   // Display only top 3 articles from fetched news
   const topArticles = Array.isArray(news) ? news.slice(0, 3) : [];
   const topnearbyProperties = Array.isArray(nearbyProperties) ? nearbyProperties.slice(0, 3) : [];
-  const demandData = {
-    apartments: ['location1', 'location2', 'location3', 'location4', 'location5'],
-    plots: ['location1', 'location2', 'location3', 'location4', 'location5'],
-    rawHouse: ['location1', 'location2', 'location3', 'location4', 'location5'],
-  };
+
 
   const userData = [
     { id: 1, title: 'Buyers', description: 'Find your perfect property with our extensive listings and personalized recommendations.', buttonText: 'Buy Now' },
@@ -213,15 +253,17 @@ useEffect(() => {
             )}
           </div>
         </section>
-
-        <section className="mb-12">
+        {
+           (Object.keys(demandmap).length > 0)? <section className="mb-12">
           <h2 className="text-2xl font-bold text-dark-text mb-6">Demand in {selectedLocation}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <DemandCard category={{ title: 'Apartments', subtitle: 'Most searched localities for Apartments' }} locations={demandData.apartments} />
-            <DemandCard category={{ title: 'Plots', subtitle: 'Most searched societies for Plots' }} locations={demandData.plots} />
-            <DemandCard category={{ title: 'Raw House', subtitle: 'Most searched localities for Houses' }} locations={demandData.rawHouse} />
+            <DemandCard category={{ title: 'Apartments', subtitle: 'Most searched localities for Apartments' }} locations={demandData["Apartment"]} />
+            <DemandCard category={{ title: 'Villas', subtitle: 'Most searched societies for Plots' }} locations={demandData["villa"]} />
+            <DemandCard category={{ title: 'Independent House', subtitle: 'Most searched localities for Houses' }} locations={demandData["Independent House"]} />
           </div>
-        </section>
+        </section>:<></>
+        }
+       
 
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-dark-text mb-6">Our Users</h2>
