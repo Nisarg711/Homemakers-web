@@ -11,6 +11,7 @@ import DemandCard from '@/components/DemandCard';
 import UserCard from '@/components/UserCard';
 import FeatureCard from '@/components/FeatureCard';
 import { useGeolocation } from '@/hooks/useGeolocation';
+import ChatWidget from '@/components/chatWidget';
 
 
 export default function DashboardPage() {
@@ -20,7 +21,7 @@ export default function DashboardPage() {
   // runs your session() callback, and returns the result as JSON.
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [selectedLocation, setSelectedLocation] = useState('All India');
+  const [selectedLocation, setSelectedLocation] = useState({});
   const [news, setNews] = useState([]);
   const { location, error, loading, getLocation } = useGeolocation();
   const [userAddress, setUserAddress] = useState(null);
@@ -143,7 +144,11 @@ setdemandData(data)
 useEffect(()=>{
   console.log("Demand Data: Indep ",demandData["Independent House"])
 },[demandData])
-
+useEffect(()=>{
+  console.log("Selected: ",selectedLocation)
+  if(selectedLocation !=null)
+  setUserAddress(selectedLocation)
+},[selectedLocation])
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -199,7 +204,7 @@ useEffect(()=>{
     <div className="min-h-screen bg-dark-bg">
       <Navbar
         locations={cities}
-        onLocationChange={(location) => setSelectedLocation(location.city)}
+        onLocationChange={(location) => setSelectedLocation(location)}
       />
 
       {/* Hero Section */}
@@ -268,7 +273,7 @@ useEffect(()=>{
         </section>
         {
            (Object.keys(demandmap).length > 0)? <section className="mb-12">
-          <h2 className="text-2xl font-bold text-dark-text mb-6">Demand in {selectedLocation}</h2>
+          <h2 className="text-2xl font-bold text-dark-text mb-6">Demand in {selectedLocation.city}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <DemandCard category={{ title: 'Apartments', subtitle: 'Most searched localities for Apartments' }} locations={demandData["Apartment"]} />
             <DemandCard category={{ title: 'Villas', subtitle: 'Most searched societies for Plots' }} locations={demandData["villa"]} />
@@ -296,6 +301,7 @@ useEffect(()=>{
           </div>
         </section>
       </main>
+      <ChatWidget/>
     </div>
   );
 }

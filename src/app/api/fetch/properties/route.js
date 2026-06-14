@@ -9,10 +9,9 @@ export async function POST(request)
         return error;
     }
     try{
-      //  console.log("Received request to fetch properties with query: ", request.url)
-       const apn = request.nextUrl.searchParams.get("apn");
-       const body = await request.json();
-       console.log("Request body: ", body)
+        const { searchParams } = new URL(request.url);
+       const apn = searchParams.get("apn");
+       
        
        // Helper function to format property data
        const formatProperty = (row) => ({
@@ -149,14 +148,16 @@ export async function POST(request)
           }, {status: 200});
        }
 
+       const body = await request.json();
+       console.log("Request body: ", body)
        // Otherwise, fallback to location-based search
-       const { state, city, district } = body;
+       const { state, city, state_district } = body;
 
        if (!state) {
           return NextResponse.json({message: "State is required for location-based search"}, {status: 400});
        }
 
-       console.log("Fetching properties based on location - State:", state, "City:", city, "District:", district);
+       console.log("Fetching properties based on location - State:", state, "City:", city, "District:", state_district);
 
        // Query with priority matching: exact match (state + city + district) OR state-only fallback
        const query = `
@@ -202,13 +203,123 @@ export async function POST(request)
           WHERE p.status = 'Available'
             AND (
               (p.state = $1 AND p.city = $2 AND p.district = $3)
-              OR (p.state = $1)
             )
           ORDER BY match_priority ASC, p.apn ASC
        `;
 
-       const result = await pool.query(query, [state, city, district]);
-       
+       const exactresult = await pool.query(query, [state, city, state_district]);
+       let result=null
+       if(exactresult.rows.length>0)
+       {
+         result=exactresult;
+       }
+       else 
+      {
+         const query = `
+          SELECT 
+            p.apn,
+            p.built_year,
+            p.status,
+            p.map_url,
+            p.area,
+            p.state,
+            p.city,
+            p.district,
+            p.local_address,
+            p.pincode,
+            p.neighborhood_info,
+            p.title,
+            p.available_for,
+            p.type,
+            p.tour_url,
+            p.society_reg_no,
+            r.monthly_rent,
+            r.security_deposit,
+            s.price,
+            u.user_id,
+            u.name as owner_name,
+            u.contact_no as owner_contact,
+            u.email as owner_email,
+            pi.image_url,
+            pi.description as image_description,
+            CASE 
+              WHEN p.state = $1 AND p.city = $2 THEN 1
+              ELSE 2
+            END as match_priority
+          FROM project.property p
+          LEFT JOIN project.rent r 
+            ON p.apn = r.property_id AND p.owner_id = r.owner_id
+          LEFT JOIN project.sell s 
+            ON p.apn = s.property_id AND p.owner_id = s.owner_id
+          LEFT JOIN project.users u 
+            ON p.owner_id = u.user_id
+          LEFT JOIN project.property_image pi 
+            ON p.apn = pi.property_id
+          WHERE p.status = 'Available'
+            AND (
+              (p.state = $1 AND p.city = $2 )
+            )
+          ORDER BY match_priority ASC, p.apn ASC
+       `;
+
+       const cityresult = await pool.query(query, [state, city]);
+       if(cityresult.rows.length>0)
+       {
+         result=cityresult;
+       }
+       else
+       {
+         const query = `
+          SELECT 
+            p.apn,
+            p.built_year,
+            p.status,
+            p.map_url,
+            p.area,
+            p.state,
+            p.city,
+            p.district,
+            p.local_address,
+            p.pincode,
+            p.neighborhood_info,
+            p.title,
+            p.available_for,
+            p.type,
+            p.tour_url,
+            p.society_reg_no,
+            r.monthly_rent,
+            r.security_deposit,
+            s.price,
+            u.user_id,
+            u.name as owner_name,
+            u.contact_no as owner_contact,
+            u.email as owner_email,
+            pi.image_url,
+            pi.description as image_description,
+            CASE 
+              WHEN p.state = $1 THEN 1
+              ELSE 2
+            END as match_priority
+          FROM project.property p
+          LEFT JOIN project.rent r 
+            ON p.apn = r.property_id AND p.owner_id = r.owner_id
+          LEFT JOIN project.sell s 
+            ON p.apn = s.property_id AND p.owner_id = s.owner_id
+          LEFT JOIN project.users u 
+            ON p.owner_id = u.user_id
+          LEFT JOIN project.property_image pi 
+            ON p.apn = pi.property_id
+          WHERE p.status = 'Available'
+            AND (
+              (p.state = $1)
+            )
+          ORDER BY match_priority ASC, p.apn ASC
+       `;
+
+       const stateresult = await pool.query(query, [state]);
+       result=stateresult
+       }
+      }
        console.log(`Found ${result.rows.length} properties matching location criteria`);
        
        // Group results by property APN to handle multiple images per property
