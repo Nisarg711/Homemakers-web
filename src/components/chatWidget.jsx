@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Search } from "lucide-react";
-
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -17,6 +16,7 @@ export default function ChatWidget() {
   const [input, setInput] = useState("");
   const [checkpointId, setCheckpointId] = useState(null);
   const messagesEndRef = useRef(null);
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,13 +60,20 @@ export default function ChatWidget() {
         url += `?checkpoint_id=${encodeURIComponent(checkpointId)}`;
       }
       //EventSource used to connect to SSE endpoint
-      const eventSource = new EventSource(url);
+      const eventSource = new EventSource(url); 
+      /*The moment this line runs, the browser opens an HTTP GET connection to your FastAPI 
+      route and keeps it open — it doesn't expect one response and close, 
+      it expects a continuous trickle of data: ...\n\n chunks for as long as the server 
+      keeps sending them.
+    EventSource is a built-in browser API specifically designed to consume the
+       text/event-stream format your FastAPI route produces.*/
       let streamedContent = "";
       let searchData = null;
+
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-
+          //console.log("Visible and received is: ",data);
           if (data.type === "checkpoint") {
             setCheckpointId(data.checkpoint_id);
           }

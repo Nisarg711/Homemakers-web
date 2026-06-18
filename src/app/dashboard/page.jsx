@@ -42,6 +42,25 @@ export default function DashboardPage() {
     fetchcities();
   },[])
 
+  useEffect(()=>{
+    async function fetchSchema(){
+       const res=await fetch('/api/fetch/schema',{
+        "method":"GET"
+       })
+       console.log(res);
+    }
+   
+  },[])
+    useEffect(()=>{
+    async function fetchSchema(){
+       const res=await fetch('/api/fetch/schema',{
+        "method":"GET"
+       })
+       const data=await res.json();
+       console.log(data);
+    }
+  fetchSchema()
+  },[])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
