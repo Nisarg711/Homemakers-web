@@ -481,14 +481,14 @@ async def generate_chat_responses(message: str, checkpoint_id: Optional[str] = N
         when the LLM produces a token, when a tool starts, when a tool ends, etc. 
         Each event is a dict with an "event" key describing what kind of event it is.'''
         event_type = event["event"]
-        node_name = event.get("metadata", {}).get("langgraph_node", "")
 
+        #on_chat_model_stream fires every time the LLM produces a new token chunk
         if event_type == "on_chat_model_stream":
-            if node_name in ("model", "format_results"):
-                chunk_content = serialise_ai_message_chunk(event["data"]["chunk"])
-                safe_content = chunk_content.replace("'", "\\'").replace("\n", "\\n")
-                yield f"data: {{\"type\": \"content\", \"content\": \"{safe_content}\"}}\n\n"
-        # router and sql_generate tokens are silently dropped — internal only
+            chunk_content = serialise_ai_message_chunk(event["data"]["chunk"])
+            # Escape single quotes and newlines for safe JSON parsing
+            safe_content = chunk_content.replace("'", "\\'").replace("\n", "\\n")
+            
+            yield f"data: {{\"type\": \"content\", \"content\": \"{safe_content}\"}}\n\n"
             
 
 
@@ -622,7 +622,3 @@ Groq's servers generate token 1 → sends over network
 Groq's servers generate token 2 → sends over network
     → ...same chain repeats...
 '''
-
-
-
-#uvicorn app:app --reload --port 8000
