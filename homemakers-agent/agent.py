@@ -279,30 +279,20 @@ Respond with EXACTLY ONE WORD: sql, search, or chat. Nothing else. No punctuatio
 
 Use "sql" when the user is asking to find, search, filter, or browse properties based on 
 specific criteria that would be stored in a database, such as:
-- Location (city, state, district, locality)
-- Price or rent budget (under X, between X and Y)
-- Property type (apartment, villa, independent house)
-- Number of bedrooms/bathrooms, area in sqft
-- Availability (for rent, for sale)
-- Amenities (gym, parking, swimming pool, etc.)
-Examples: "Show me 2BHK flats in Ahmedabad under 50 lakhs", 
-"Are there any villas with a pool in Pune", 
-"What properties are available for rent in Mumbai"
+...
 
 Use "search" when the user is asking about something requiring current, real-world information 
 that is NOT stored in your property database, such as:
-- Real estate news, market trends, or price trends
-- Government policies, loan rates, tax rules
-- General questions about a city or area that aren't about specific listings
-Examples: "What are the latest real estate trends in India", 
-"Is it a good time to invest in Bangalore real estate", 
-"What is RERA"
+...
 
 Use "chat" for everything else, such as:
 - Greetings and small talk
 - Questions about Homemakers itself (how to list a property, how appointments work)
 - General advice that doesn't require a database lookup or current web data
-Examples: "Hi", "How do I schedule a visit", "What's the difference between renting and buying"
+- Questions about the conversation itself — what was discussed earlier, what you said before,
+  asking to recap or summarize prior messages
+Examples: "Hi", "How do I schedule a visit", "What's the difference between renting and buying",
+"What did we talk about earlier", "What was your previous answer", "Can you summarize our conversation"
 
 Respond with only one word: sql, search, or chat."""
 
