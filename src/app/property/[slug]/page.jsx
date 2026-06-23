@@ -195,7 +195,7 @@ export default function PropertyDetailPage() {
     setTourErrors((prev) => ({ ...prev, submit: '' }));
 
     try {
-      const res = await fetch("/api/appointment", {
+      const res = await fetch("/api/appointment/create", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(appointmentRequest),
