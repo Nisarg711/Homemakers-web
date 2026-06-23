@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionWrapper from "@/components/sessionprovider";
-// import {auth} from "@/lib/auth"
+import { AppointmentsProvider } from "@/context/AppointmentsContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,16 +21,19 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }) {
-  // const session=await auth();
+export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <body className="min-h-full flex flex-col bg-dark-bg text-dark-text">
         <SessionWrapper>
-      <body className="min-h-full flex flex-col bg-dark-bg text-dark-text">{children}</body>
-      </SessionWrapper>
+          <AppointmentsProvider>
+            {children}
+          </AppointmentsProvider>
+        </SessionWrapper>
+      </body>
     </html>
   );
 }
