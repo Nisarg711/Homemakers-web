@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import {
   ArrowLeft, ArrowRight, Home, MapPin, IndianRupee, Sparkles,
-  Image as ImageIcon, Check, X, Plus, Building2, Loader2
+  Image as ImageIcon, Check, X, Plus, Building2, Loader2,
+  Hash, UserCheck, AlertCircle, CheckCircle2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -28,6 +29,7 @@ const STEPS = [
 
 const initialFormState = {
   // Step 1 — basics
+  apn: '',
   title: '',
   type: '',
   builtYear: '',
@@ -35,6 +37,7 @@ const initialFormState = {
   availableFor: '',
   neighborhoodInfo: '',
   tourUrl: '',
+  agentLcNo: '',
 
   // Step 2 — location
   state: '',
@@ -44,6 +47,7 @@ const initialFormState = {
   pincode: '',
   mapUrl: '',
   partOfSociety: false,
+  societyRegNo: '',
   societyName: '',
 
   // Step 3 — pricing
@@ -66,6 +70,18 @@ export default function SellPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [SelectedCountry,SetSelectedCountry]=useState("India");
+  const [SelectedState,SetSelectedState]=useState("");
+  const [states,setstates]=useState([])
+
+
+  // Agent lookup state: 'idle' | 'checking' | 'valid' | 'invalid'
+  const [agentCheckStatus, setAgentCheckStatus] = useState('idle');
+  const [agentName, setAgentName] = useState('');
+
+  // Society lookup state: 'idle' | 'checking' | 'valid' | 'invalid'
+  const [societyCheckStatus, setSocietyCheckStatus] = useState('idle');
+  const [societyFoundName, setSocietyFoundName] = useState('');
 
   const updateField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -73,6 +89,117 @@ export default function SellPage() {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
+
+useEffect(() => {
+  const getStatesByCountry = async () => {
+    try {
+      const res = await fetch("/api/fetch/states");
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error(
+          "Failed to fetch states:",
+          data.error || "Unknown error"
+        );
+        return;
+      }
+
+      console.log("States fetched successfully:", data.message);
+      setstates(data.message); // if you want to update state
+    } catch (err) {
+      console.error("Network error while fetching states:", err);
+    }
+  };
+
+  getStatesByCountry();
+}, []);
+  // TODO: build /api/agent/verify — should accept { licenceNo } and return
+  // { found: true, name: 'Agent Name' } or { found: false }
+  const checkAgentExists = async (licenceNo) => {
+    if (!licenceNo.trim()) {
+      setAgentCheckStatus('idle');
+      setAgentName('');
+      return;
+    }
+
+    setAgentCheckStatus('checking');
+    try {
+      const res = await fetch(`/api/agent/verify?licenceNo=${encodeURIComponent(licenceNo)}`);
+      const data = await res.json();
+
+      if (res.ok && data.found) {
+        setAgentCheckStatus('valid');
+        setAgentName(data.name || '');
+      } else {
+        setAgentCheckStatus('invalid');
+        setAgentName('');
+      }
+    } catch (err) {
+      // Endpoint doesn't exist yet — treat as "can't verify" rather than blocking the form
+      setAgentCheckStatus('idle');
+      setAgentName('');
+    }
+  };
+
+  // TODO: build /api/society/verify — should accept { societyRegNo } and return
+  // { found: true, name: 'Society Name' } or { found: false }
+  const checkSocietyExists = async (regNo) => {
+    if (!regNo.trim()) {
+      setSocietyCheckStatus('idle');
+      setSocietyFoundName('');
+      return;
+    }
+
+    setSocietyCheckStatus('checking');
+    try {
+      const res = await fetch(`/api/society/verify?societyRegNo=${encodeURIComponent(regNo)}`);
+      const data = await res.json();
+
+      if (res.ok && data.found) {
+        setSocietyCheckStatus('valid');
+        setSocietyFoundName(data.name || '');
+        // Auto-fill the society name from the lookup, no need to ask the user
+        setFormData((prev) => ({ ...prev, societyName: data.name || prev.societyName }));
+      } else {
+        setSocietyCheckStatus('invalid');
+        setSocietyFoundName('');
+      }
+    } catch (err) {
+      setSocietyCheckStatus('idle');
+      setSocietyFoundName('');
+    }
+  };
+
+  // Debounce agent lookup — wait until the user pauses typing for 500ms
+  const agentDebounceRef = useRef(null);
+  useEffect(() => {
+    clearTimeout(agentDebounceRef.current);
+    if (!formData.agentLcNo.trim()) {
+      setAgentCheckStatus('idle');
+      setAgentName('');
+      return;
+    }
+    agentDebounceRef.current = setTimeout(() => {
+      checkAgentExists(formData.agentLcNo);
+    }, 500);
+    return () => clearTimeout(agentDebounceRef.current);
+  }, [formData.agentLcNo]);
+
+  // Debounce society reg no lookup
+  const societyDebounceRef = useRef(null);
+  useEffect(() => {
+    clearTimeout(societyDebounceRef.current);
+    if (!formData.societyRegNo.trim()) {
+      setSocietyCheckStatus('idle');
+      setSocietyFoundName('');
+      return;
+    }
+    societyDebounceRef.current = setTimeout(() => {
+      checkSocietyExists(formData.societyRegNo);
+    }, 500);
+    return () => clearTimeout(societyDebounceRef.current);
+  }, [formData.societyRegNo]);
 
   const toggleAmenity = (amenity, listKey = 'amenities') => {
     setFormData((prev) => {
@@ -107,6 +234,8 @@ export default function SellPage() {
     const newErrors = {};
 
     if (currentStep === 1) {
+      if (!formData.apn.trim()) newErrors.apn = 'Property APN is required';
+      else if (!/^\d+$/.test(formData.apn.trim())) newErrors.apn = 'APN must be numeric';
       if (!formData.title.trim()) newErrors.title = 'Give your property a name';
       if (!formData.type) newErrors.type = 'Select a property type';
       if (!formData.builtYear) newErrors.builtYear = 'Built year is required';
@@ -116,6 +245,9 @@ export default function SellPage() {
       if (!formData.area) newErrors.area = 'Area is required';
       else if (Number(formData.area) <= 0) newErrors.area = 'Area must be greater than 0';
       if (!formData.availableFor) newErrors.availableFor = 'Select what this listing is for';
+      if (formData.agentLcNo.trim() && agentCheckStatus === 'invalid') {
+        newErrors.agentLcNo = 'This agent licence number was not found. Leave it blank or correct it.';
+      }
     }
 
     if (currentStep === 2) {
@@ -125,8 +257,15 @@ export default function SellPage() {
       if (!formData.localAddress.trim()) newErrors.localAddress = 'Local address is required';
       if (!formData.pincode) newErrors.pincode = 'Pincode is required';
       else if (!/^\d{6}$/.test(formData.pincode)) newErrors.pincode = 'Enter a valid 6-digit pincode';
-      if (formData.partOfSociety && !formData.societyName.trim()) {
-        newErrors.societyName = 'Society name is required';
+
+      if (formData.partOfSociety) {
+        const regNoEntered = formData.societyRegNo.trim();
+        if (regNoEntered && societyCheckStatus === 'invalid' && !formData.societyName.trim()) {
+          newErrors.societyName = 'We couldn\'t find this society. Please name it so we can add it.';
+        }
+        if (!regNoEntered && !formData.societyName.trim()) {
+          newErrors.societyName = 'Society name is required';
+        }
       }
     }
 
@@ -203,11 +342,11 @@ export default function SellPage() {
   };
 
   const inputClass = (field) =>
-    `w-full px-4 py-2.5 bg-dark-bg-primary border text-black rounded-lg placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/40 transition ${
+    `w-full px-4 py-2.5 bg-dark-bg-primary border rounded-lg text-black placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/40 transition ${
       errors[field] ? 'border-red-500' : 'border-dark-border focus:border-accent-primary'
     }`;
 
-  const labelClass = 'block text-sm  font-medium text-dark-text-secondary mb-1.5';
+  const labelClass = 'block text-sm font-medium text-dark-text-secondary mb-1.5';
 
   if (submitted) {
     return (
@@ -310,6 +449,24 @@ export default function SellPage() {
               <p className="text-dark-text-secondary text-sm mb-4">Start with the essentials.</p>
 
               <div>
+                <label className={labelClass}>Property APN</label>
+                <div className="relative">
+                  <Hash size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-text-muted" />
+                  <input
+                    type="text"
+                    value={formData.apn}
+                    onChange={(e) => updateField('apn', e.target.value)}
+                    placeholder="e.g. 5000000029"
+                    className={inputClass('apn') + ' pl-9'}
+                  />
+                </div>
+                <p className="text-dark-text-muted text-xs mt-1">
+                  A unique identifier for this property (Assessor's Parcel Number).
+                </p>
+                {errors.apn && <p className="text-red-400 text-xs mt-1">{errors.apn}</p>}
+              </div>
+
+              <div>
                 <label className={labelClass}>Property Title</label>
                 <input
                   type="text"
@@ -399,6 +556,43 @@ export default function SellPage() {
                   placeholder="https://..."
                   className={inputClass('tourUrl')}
                 />
+              </div>
+
+              <div className="pt-2 border-t border-dark-border">
+                <label className={labelClass}>Agent Licence Number (optional)</label>
+                <div className="relative">
+                  <UserCheck size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-text-muted" />
+                  <input
+                    type="text"
+                    value={formData.agentLcNo}
+                    onChange={(e) => updateField('agentLcNo', e.target.value)}
+                    placeholder="If listed through an agent, enter their licence number"
+                    className={inputClass('agentLcNo') + ' pl-9 pr-9'}
+                  />
+                  {agentCheckStatus === 'checking' && (
+                    <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-text-muted animate-spin" />
+                  )}
+                  {agentCheckStatus === 'valid' && (
+                    <CheckCircle2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-green-400" />
+                  )}
+                  {agentCheckStatus === 'invalid' && (
+                    <AlertCircle size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400" />
+                  )}
+                </div>
+
+                {agentCheckStatus === 'valid' && agentName && (
+                  <p className="text-green-400 text-xs mt-1.5 flex items-center gap-1">
+                    <CheckCircle2 size={12} />
+                    Agent verified: {agentName}
+                  </p>
+                )}
+                {agentCheckStatus === 'invalid' && (
+                  <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
+                    <AlertCircle size={12} />
+                    This agent is not registered on Homemakers. Leave this field blank to list without an agent.
+                  </p>
+                )}
+                {errors.agentLcNo && <p className="text-red-400 text-xs mt-1">{errors.agentLcNo}</p>}
               </div>
             </div>
           )}

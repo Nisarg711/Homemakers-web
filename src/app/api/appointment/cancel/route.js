@@ -20,7 +20,6 @@ export async function POST(request) {
     console.log("user Trying to cancel Appointment for: ",userid," ",apn, Issue_date,Issue_time);
     const query=`DELETE from project.appointment as a where a.user_id=$1 and a.issue_date=$2 and a.issue_time=$3`;
     const res=await pool.query(query,[userid,Issue_date,Issue_time])
-    console.log("Deletion REsult: ",res)
     return NextResponse.json(
       {
         message: res
