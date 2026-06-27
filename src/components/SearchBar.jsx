@@ -69,8 +69,8 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
       const data = await res.json();
       console.log("Search results: ", data);
       // Store results so the results page can read them
-      //sessionStorage.setItem('searchResults', JSON.stringify(data.properties));
-      // router.push('/search/results');
+      sessionStorage.setItem('searchResults', JSON.stringify(data.properties));
+       router.push('/search/results');
     } catch (err) {
       console.error('Search failed:', err);
     }
