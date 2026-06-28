@@ -265,7 +265,7 @@ export default function PropertyDetailPage() {
      <div className="min-h-screen bg-dark-bg">
       <Navbar />
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Back Button */}
         <Link href="/dashboard" className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition">
           <ArrowLeft size={20} />
@@ -273,22 +273,22 @@ export default function PropertyDetailPage() {
         </Link>
 
         {/* Header with Price and Actions */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-4xl font-bold text-dark-text mb-2">{property.title}</h1>
-            <div className="flex items-center gap-4">
-              <span className="text-2xl font-bold text-accent-primary">{property.price}</span>
-              <span className="px-3 py-1 bg-accent-primary/10 text-accent-primary rounded-full text-sm font-medium border border-accent-primary/30">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl sm:text-4xl font-bold text-dark-text mb-2 break-words">{property.title}</h1>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+              <span className="text-xl sm:text-2xl font-bold text-accent-primary">{property.price}</span>
+              <span className="px-3 py-1 bg-accent-primary/10 text-accent-primary rounded-full text-xs sm:text-sm font-medium border border-accent-primary/30">
                 {property.status}
               </span>
               {property.monthlyRent && (
-                <span className="text-dark-text-secondary">Rent: {property.monthlyRent}/month</span>
+                <span className="text-xs sm:text-sm text-dark-text-secondary">Rent: {property.monthlyRent}/month</span>
               )}
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 self-end sm:self-start">
             <button
               onClick={() => setIsFavorite(!isFavorite)}
               className="p-3 bg-dark-bg-secondary rounded-full border border-dark-border hover:border-accent-primary/50 hover:bg-dark-bg-hover transition"
@@ -309,7 +309,7 @@ export default function PropertyDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Image Gallery */}
             <div className="bg-dark-bg-secondary rounded-lg overflow-hidden border border-dark-border shadow-dark-lg">
-              <div className="relative h-96 bg-gradient-to-br from-dark-bg-tertiary via-dark-bg-secondary to-accent-primary/10">
+              <div className="relative h-56 sm:h-96 bg-gradient-to-br from-dark-bg-tertiary via-dark-bg-secondary to-accent-primary/10">
                 <img
                   src={property.images[selectedImageIndex]}
                   alt={`Property view ${selectedImageIndex + 1}`}
@@ -323,7 +323,7 @@ export default function PropertyDetailPage() {
                   <button
                     key={idx}
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition ${
+                    className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 overflow-hidden transition ${
                       selectedImageIndex === idx ? 'border-accent-primary' : 'border-dark-border hover:border-accent-primary/50'
                     }`}
                   >
@@ -335,12 +335,12 @@ export default function PropertyDetailPage() {
 
             {/* Tabs */}
             <div className="bg-dark-bg-secondary rounded-lg border border-dark-border overflow-hidden">
-              <div className="flex border-b border-dark-border">
+              <div className="flex border-b border-dark-border overflow-x-auto scrollbar-none whitespace-nowrap">
                 {['overview', 'amenities', 'location', 'Point of Contact'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`flex-1 py-4 px-6 font-medium text-center transition ${
+                    className={`flex-1 py-3 sm:py-4 px-4 sm:px-6 font-medium text-center transition text-sm sm:text-base min-w-[100px] ${
                       activeTab === tab
                         ? 'bg-accent-primary text-white'
                         : 'text-dark-text-secondary hover:text-dark-text'
@@ -352,11 +352,11 @@ export default function PropertyDetailPage() {
               </div>
 
               {/* Tab Content */}
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 {activeTab === 'overview' && (
                   <div className="space-y-6">
                     {/* Quick Stats */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="bg-dark-bg-primary p-4 rounded-lg border border-dark-border">
                         <div className="flex items-center gap-3 mb-2">
                           <Bed size={20} className="text-accent-primary" />
@@ -390,7 +390,7 @@ export default function PropertyDetailPage() {
                     {/* Description */}
                     <div>
                       <h3 className="text-lg font-bold text-dark-text mb-3">About This Property</h3>
-                      <p className="text-dark-text-secondary leading-relaxed">{property.description}</p>
+                      <p className="text-dark-text-secondary leading-relaxed text-sm sm:text-base">{property.description}</p>
                     </div>
 
                     {/* Highlights */}
@@ -398,7 +398,7 @@ export default function PropertyDetailPage() {
                       <h3 className="text-lg font-bold text-dark-text mb-3">Property Highlights</h3>
                       <ul className="space-y-2">
                         {property.highlights?.map((highlight, idx) => (
-                          <li key={idx} className="flex items-start gap-3 text-dark-text-secondary">
+                          <li key={idx} className="flex items-start gap-3 text-dark-text-secondary text-sm sm:text-base">
                             <span className="text-accent-primary text-xl leading-none">✓</span>
                             <span>{highlight}</span>
                           </li>
@@ -411,11 +411,11 @@ export default function PropertyDetailPage() {
                 {activeTab === 'amenities' && (
                   <div>
                     <h3 className="text-lg font-bold text-dark-text mb-4">Amenities & Features</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {property.amenities.map((amenity, idx) => (
                         <div key={idx} className="flex items-center gap-3 p-3 bg-dark-bg-primary rounded-lg border border-dark-border">
                           <div className="w-2 h-2 bg-accent-primary rounded-full" />
-                          <span className="text-dark-text">{amenity}</span>
+                          <span className="text-dark-text text-sm sm:text-base">{amenity}</span>
                         </div>
                       ))}
                     </div>

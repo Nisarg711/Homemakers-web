@@ -378,7 +378,7 @@ useEffect(() => {
     <div className="min-h-screen bg-dark-bg">
       <Navbar />
 
-      <main className="max-w-3xl mx-auto px-6 py-8">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <Link
           href="/dashboard"
           className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition"
@@ -387,9 +387,9 @@ useEffect(() => {
           Back to Dashboard
         </Link>
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-dark-text mb-2">List Your Property</h1>
-          <p className="text-dark-text-secondary">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-dark-text mb-2">List Your Property</h1>
+          <p className="text-sm text-dark-text-secondary">
             Fill in the details below to put your property in front of buyers and tenants.
           </p>
         </div>
@@ -404,7 +404,7 @@ useEffect(() => {
               <div key={s.id} className="flex items-center flex-1 last:flex-none">
                 <div className="flex flex-col items-center gap-2">
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition ${
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border-2 transition ${
                       isComplete
                         ? 'bg-accent-primary border-accent-primary text-white'
                         : isActive
@@ -412,10 +412,10 @@ useEffect(() => {
                         : 'border-dark-border text-dark-text-muted'
                     }`}
                   >
-                    {isComplete ? <Check size={18} /> : <Icon size={18} />}
+                    {isComplete ? <Check size={16} /> : <Icon size={16} />}
                   </div>
                   <span
-                    className={`text-xs font-medium text-center hidden sm:block ${
+                    className={`text-[10px] sm:text-xs font-medium text-center hidden sm:block ${
                       isActive ? 'text-accent-primary' : 'text-dark-text-muted'
                     }`}
                   >
@@ -424,7 +424,7 @@ useEffect(() => {
                 </div>
                 {idx < STEPS.length - 1 && (
                   <div
-                    className={`flex-1 h-0.5 mx-2 transition ${
+                    className={`flex-1 h-0.5 mx-1 sm:mx-2 transition ${
                       isComplete ? 'bg-accent-primary' : 'bg-dark-border'
                     }`}
                   />
@@ -435,11 +435,11 @@ useEffect(() => {
         </div>
 
         {/* Form Card */}
-        <div className="bg-dark-bg-secondary rounded-lg border border-dark-border shadow-dark-lg p-8">
+        <div className="bg-dark-bg-secondary rounded-lg border border-dark-border shadow-dark-lg p-4 sm:p-8">
           {/* Step 1 — Property Basics */}
           {step === 1 && (
             <div className="space-y-5">
-              <h2 className="text-xl font-bold text-dark-text mb-1">Tell us about the property</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-dark-text mb-1">Tell us about the property</h2>
               <p className="text-dark-text-secondary text-sm mb-4">Start with the essentials.</p>
 
               <div>

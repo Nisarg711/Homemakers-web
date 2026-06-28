@@ -100,10 +100,10 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
   }, [selectedLocations])
   return (
     <div className="w-full bg-dark-bg-secondary/95 shadow-dark-xl rounded-lg overflow-visible mx-auto max-w-6xl -mt-8 relative z-20 border border-dark-border backdrop-blur-xs">
-      <div className="flex items-center px-6 py-4 gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-4">
 
         {/* Filter Buttons */}
-        <div className="flex gap-2 border-r border-dark-border pr-6">
+        <div className="flex gap-2 sm:border-r border-dark-border sm:pr-6 shrink-0">
           {[
             { id: 'buy', label: 'Buy' },
             { id: 'rent', label: 'Rent' },
@@ -112,7 +112,7 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition ${activeFilter === filter.id
+              className={`px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm transition ${activeFilter === filter.id
                   ? 'bg-accent-primary text-white shadow-dark-md'
                   : 'bg-dark-bg-tertiary text-dark-text-secondary hover:bg-dark-bg-hover'
                 }`}
@@ -122,103 +122,106 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
           ))}
         </div>
 
-        {/* Search Input */}
-        <div className="flex-1 relative" ref={searchContainerRef}>
-          {selectedLocations.length > 0 && (
-            <div className="flex gap-2 flex-wrap mb-2">
-              {selectedLocations.map((loc, idx) => (
-                <span
-                  key={`${loc.city}-${idx}`}
-                  className="flex items-center gap-1.5 px-3 py-1 bg-accent-primary/10 text-accent-primary text-sm rounded-full border border-accent-primary/30"
-                >
-                  {loc.city}
-                  <button onClick={() => {
-                    setSelectedLocations(selectedLocations.filter((ele) => {
-                      return ele.city !== loc.city;
-                    }))
-                  }}>
-                    <X size={14} />
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-          <input
-            type="text"
-            placeholder={
-              userAddress
-                ? `${userAddress.suburb || userAddress.city || 'Search based on City or title of Property'}`
-                : "Search by locality, project, or landmark"
-            }
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            className="w-full bg-transparent focus:outline-none placeholder:text-dark-text-muted text-dark-text"
-          />
-          {/* dropdown goes here, absolutely positioned */}
-          {showSuggestions && (
-            <div className="absolute top-full left-0 mt-2 w-full bg-dark-bg-tertiary rounded-lg shadow-dark-xl border border-dark-border max-h-72 overflow-y-auto z-50">
-              {suggestionsLoading ? (
-                <p className="text-dark-text-muted text-sm text-center py-4">Searching...</p>
-              ) : suggestions.length > 0 ? (
-                <div className="py-2">
-                  {suggestions.map((suggestion, idx) => (
-                    <button
-                      key={`${suggestion.type}-${suggestion.label}-${idx}`}
-                      onClick={() => {
-                        handlesuggestionClick(suggestion);
-                        console.log(suggestion)
-                      }}
-                      className="w-full flex items-center justify-between gap-3 text-left px-4 py-2.5 hover:bg-dark-bg-hover transition"
-                    >
-                      <div>
-                        <span className="block text-dark-text font-medium text-sm">
-                          {suggestion.label}
-                        </span>
-                        <span className="block text-dark-text-muted text-xs">
-                          {suggestion.subtitle}
-                        </span>
-                      </div>
-                      <span
-                        className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full border ${suggestion.type === 'property'
-                            ? 'bg-accent-primary/10 text-accent-primary border-accent-primary/30'
-                            : 'bg-dark-bg-secondary text-dark-text-secondary border-dark-border'
-                          }`}
-                      >
-                        {suggestion.type === 'property' ? 'Property' : 'City'}
-                      </span>
+        {/* Search Input + Action Buttons row */}
+        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+          {/* Search Input */}
+          <div className="flex-1 relative min-w-0" ref={searchContainerRef}>
+            {selectedLocations.length > 0 && (
+              <div className="flex gap-2 flex-wrap mb-2">
+                {selectedLocations.map((loc, idx) => (
+                  <span
+                    key={`${loc.city}-${idx}`}
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 bg-accent-primary/10 text-accent-primary text-xs sm:text-sm rounded-full border border-accent-primary/30"
+                  >
+                    {loc.city}
+                    <button onClick={() => {
+                      setSelectedLocations(selectedLocations.filter((ele) => {
+                        return ele.city !== loc.city;
+                      }))
+                    }}>
+                      <X size={14} />
                     </button>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-dark-text-muted text-sm text-center py-4">No results found</p>
-              )}
-            </div>
-          )}
+                  </span>
+                ))}
+              </div>
+            )}
+            <input
+              type="text"
+              placeholder={
+                userAddress
+                  ? `${userAddress.suburb || userAddress.city || 'Search based on City or title of Property'}`
+                  : "Search by locality, project, or landmark"
+              }
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              className="w-full bg-transparent focus:outline-none placeholder:text-dark-text-muted text-dark-text text-sm sm:text-base"
+            />
+            {/* dropdown goes here, absolutely positioned */}
+            {showSuggestions && (
+              <div className="absolute top-full left-0 mt-2 w-full bg-dark-bg-tertiary rounded-lg shadow-dark-xl border border-dark-border max-h-72 overflow-y-auto z-50">
+                {suggestionsLoading ? (
+                  <p className="text-dark-text-muted text-sm text-center py-4">Searching...</p>
+                ) : suggestions.length > 0 ? (
+                  <div className="py-2">
+                    {suggestions.map((suggestion, idx) => (
+                      <button
+                        key={`${suggestion.type}-${suggestion.label}-${idx}`}
+                        onClick={() => {
+                          handlesuggestionClick(suggestion);
+                          console.log(suggestion)
+                        }}
+                        className="w-full flex items-center justify-between gap-3 text-left px-4 py-2.5 hover:bg-dark-bg-hover transition"
+                      >
+                        <div className="min-w-0">
+                          <span className="block text-dark-text font-medium text-sm truncate">
+                            {suggestion.label}
+                          </span>
+                          <span className="block text-dark-text-muted text-xs truncate">
+                            {suggestion.subtitle}
+                          </span>
+                        </div>
+                        <span
+                          className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full border ${suggestion.type === 'property'
+                              ? 'bg-accent-primary/10 text-accent-primary border-accent-primary/30'
+                              : 'bg-dark-bg-secondary text-dark-text-secondary border-dark-border'
+                            }`}
+                        >
+                          {suggestion.type === 'property' ? 'Property' : 'City'}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-dark-text-muted text-sm text-center py-4">No results found</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Location Button */}
+          <button
+            onClick={onLocationRequest}
+            disabled={locationLoading}
+            className={`p-2 hover:bg-dark-bg-hover rounded-lg transition shrink-0 ${location ? 'text-green-400' : 'text-accent-primary'
+              } disabled:opacity-50`}
+          >
+            <MapPin size={20} className="sm:w-[22px] sm:h-[22px]" />
+          </button>
+
+          {/* Search Button */}
+          <button
+            onClick={handleSearch}
+            className="p-2 bg-accent-primary hover:bg-accent-dark text-white rounded-lg transition shadow-dark-md shrink-0"
+          >
+            <Search size={20} className="sm:w-[22px] sm:h-[22px]" />
+          </button>
         </div>
-
-        {/* Location Button */}
-        <button
-          onClick={onLocationRequest}
-          disabled={locationLoading}
-          className={`p-2 hover:bg-dark-bg-hover rounded-lg transition ${location ? 'text-green-400' : 'text-accent-primary'
-            } disabled:opacity-50`}
-        >
-          <MapPin size={22} />
-        </button>
-
-        {/* Search Button */}
-        <button
-          onClick={handleSearch}
-          className="p-2 bg-accent-primary hover:bg-accent-dark text-white rounded-lg transition shadow-dark-md"
-        >
-          <Search size={22} />
-        </button>
       </div>
 
       {/* Address display when location is detected */}
       {userAddress && (
-        <div className="px-6 pb-2 text-xs text-green-400">
+        <div className="px-4 sm:px-6 pb-2 text-xs text-green-400">
           📍 {userAddress.suburb || userAddress.neighbourhood} {userAddress.city || userAddress.village}, {userAddress.state}, {userAddress.country}
         </div>
       )}

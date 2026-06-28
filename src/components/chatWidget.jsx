@@ -55,12 +55,12 @@ export default function ChatWidget() {
 
     try {
       // let url = `/api/chat?message=${encodeURIComponent(userInput)}`;
-      let url=`https://homemakers-latest.onrender.com/chat_stream/${encodeURIComponent(userInput)}`;
+      let url = `https://homemakers-latest.onrender.com/chat_stream/${encodeURIComponent(userInput)}`;
       if (checkpointId) {
         url += `?checkpoint_id=${encodeURIComponent(checkpointId)}`;
       }
       //EventSource used to connect to SSE endpoint
-      const eventSource = new EventSource(url); 
+      const eventSource = new EventSource(url);
       /*The moment this line runs, the browser opens an HTTP GET connection to your FastAPI 
       route and keeps it open — it doesn't expect one response and close, 
       it expects a continuous trickle of data: ...\n\n chunks for as long as the server 
@@ -176,10 +176,10 @@ export default function ChatWidget() {
             prev.map((msg) =>
               msg.id === aiResponseId
                 ? {
-                    ...msg,
-                    content: "Sorry, something went wrong. Please try again.",
-                    isLoading: false,
-                  }
+                  ...msg,
+                  content: "Sorry, something went wrong. Please try again.",
+                  isLoading: false,
+                }
                 : msg
             )
           );
@@ -192,10 +192,10 @@ export default function ChatWidget() {
         prev.map((msg) =>
           msg.id === aiResponseId
             ? {
-                ...msg,
-                content: "Sorry, could not connect to the assistant.",
-                isLoading: false,
-              }
+              ...msg,
+              content: "Sorry, could not connect to the assistant.",
+              isLoading: false,
+            }
             : msg
         )
       );
@@ -254,9 +254,9 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className={`fixed z-50 ${open ? 'inset-0 sm:inset-auto sm:bottom-6 sm:right-6' : 'bottom-4 right-4 sm:bottom-6 sm:right-6'}`}>
       {open && (
-        <div className="w-96 h-[520px] bg-dark-bg-secondary border border-dark-border rounded-xl shadow-dark-xl flex flex-col mb-4">
+        <div className="w-full sm:w-96 h-full sm:h-[520px] bg-dark-bg-secondary sm:border border-dark-border sm:rounded-xl shadow-dark-xl flex flex-col sm:mb-4">
 
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-dark-border">
@@ -285,11 +285,10 @@ export default function ChatWidget() {
                 className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] px-3 py-2 rounded-lg text-sm whitespace-pre-wrap ${
-                    msg.isUser
-                      ? "bg-accent-primary text-white"
-                      : "bg-dark-bg-tertiary text-dark-text"
-                  }`}
+                  className={`max-w-[85%] px-3 py-2 rounded-lg text-sm whitespace-pre-wrap ${msg.isUser
+                    ? "bg-accent-primary text-white"
+                    : "bg-dark-bg-tertiary text-dark-text"
+                    }`}
                 >
                   {/* Loading dots */}
                   {msg.isLoading && !msg.content ? (
@@ -317,7 +316,7 @@ export default function ChatWidget() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-dark-border flex gap-2">
+          <div className="p-4 border-t border-dark-border flex gap-2 pb-6 sm:pb-4">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -336,12 +335,14 @@ export default function ChatWidget() {
       )}
 
       {/* Toggle Button */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="bg-accent-primary text-white p-4 rounded-full shadow-dark-xl hover:bg-accent-dark transition"
-      >
-        <MessageCircle size={24} />
-      </button>
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          className="bg-accent-primary text-white p-3.5 sm:p-4 rounded-full shadow-dark-xl hover:bg-accent-dark transition flex items-center justify-center"
+        >
+          <MessageCircle size={22} className="sm:w-6 sm:h-6" />
+        </button>
+      )}
     </div>
   );
 }

@@ -28,29 +28,8 @@ export default function DashboardPage() {
   const [nearbyProperties, setNearbyProperties] = useState([]);
   const [demandmap,setdemandmap]=useState({})
   const [demandData,setdemandData]=useState({});
-  const [cities,setcities]=useState([]);
- 
-  useEffect(()=>{
-    const fetchcities=async()=>{
-      const res=await fetch('/api/fetch/locations',{
-        "method":"GET"
-      })
-      const data=await res.json();
-      console.log("City State Data: ",data);
-      setcities(data.locations);
-    }
-    fetchcities();
-  },[])
+  
 
-  useEffect(()=>{
-    async function fetchSchema(){
-       const res=await fetch('/api/fetch/schema',{
-        "method":"GET"
-       })
-       console.log(res);
-    }
-   
-  },[])
     useEffect(()=>{
     async function fetchSchema(){
        const res=await fetch('/api/fetch/schema',{
@@ -222,43 +201,38 @@ useEffect(()=>{
   return (
     <div className="min-h-screen bg-dark-bg">
       <Navbar
-        locations={cities}
         onLocationChange={(location) => setSelectedLocation(location)}
       />
 
       {/* Hero Section */}
       <div
-        className="relative h-64 flex items-center justify-center overflow-hidden bg-cover bg-center"
-        style={{ backgroundImage: 'url(./cover.png)' }}
+        className="relative h-48 sm:h-64 flex items-center justify-center overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: 'url(/cover.png)' }}
       >
         <div className="absolute inset-0 bg-black/60" />
-        <div className="text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <div className="text-center relative z-10 px-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-2 sm:mb-4">
             Find Your Perfect Home
           </h1>
-          <p className="text-lg text-white/80">
+          <p className="text-sm sm:text-lg text-white/80">
             Welcome back, {session.user.name}
           </p>
         </div>
       </div>
 
       {/* Search Bar Section */}
-      <div className="px-6 pb-12">
+      <div className="px-4 sm:px-6 pb-8 sm:pb-12">
         <SearchBar onLocationRequest={getLocation} location={location}
         locationLoading={loading}
         userAddress={userAddress} />
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <section className="mb-12">
-          <h2 className="text-3xl font-bold text-dark-text mb-2">Recommended for You</h2>
-          <p className="text-dark-text-secondary mb-8">Properties based on your entered location</p>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dark-text mb-1 sm:mb-2">Recommended for You</h2>
+          <p className="text-xs sm:text-sm text-dark-text-secondary mb-6 sm:mb-8">Properties based on your entered location</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* {propertyRecommendations.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))} */}
-
             {topnearbyProperties.length > 0 && topnearbyProperties.map((property) => (
               <PropertyCard key={property.apn} property={
                 {
@@ -276,8 +250,8 @@ useEffect(()=>{
           </div>
         </section>
 
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-dark-text mb-6">Top Articles</h2>
+        <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Top Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {topArticles.length > 0 ? (
               topArticles.map((article, index) => (
@@ -291,8 +265,8 @@ useEffect(()=>{
           </div>
         </section>
         {
-           (Object.keys(demandmap).length > 0)? <section className="mb-12">
-          <h2 className="text-2xl font-bold text-dark-text mb-6">Demand in {selectedLocation.city}</h2>
+           (Object.keys(demandmap).length > 0)? <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Demand in {selectedLocation.city}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <DemandCard category={{ title: 'Apartments', subtitle: 'Most searched localities for Apartments' }} locations={demandData["Apartment"]} />
             <DemandCard category={{ title: 'Villas', subtitle: 'Most searched societies for Plots' }} locations={demandData["villa"]} />
@@ -302,8 +276,8 @@ useEffect(()=>{
         }
        
 
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-dark-text mb-6">Our Users</h2>
+        <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Our Users</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {userData.map((user) => (
               <UserCard key={user.id} userType={user} />
@@ -312,7 +286,7 @@ useEffect(()=>{
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-dark-text mb-6">Why Homemakers?</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Why Homemakers?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature) => (
               <FeatureCard key={feature.id} feature={feature} />
