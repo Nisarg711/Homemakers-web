@@ -234,11 +234,16 @@ export default function PropertyDetailPage() {
     setIsTourSubmitting(false);
   };
 
+  const tabs = ['overview', 'amenities', 'location', 'Point of Contact'];
+
+  const inputClass = "w-full px-3.5 py-2.5 bg-dark-bg-primary border border-dark-border/60 rounded-xl text-dark-text placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary transition text-sm";
+
   if (loading) {
     return (
       <div className="min-h-screen bg-dark-bg flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-dark-text-secondary text-lg">Loading property details...</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full border-2 border-accent-primary border-t-transparent animate-spin" />
+          <p className="text-dark-text-secondary text-sm font-medium">Loading property details...</p>
         </div>
       </div>
     );
@@ -248,12 +253,12 @@ export default function PropertyDetailPage() {
     return (
       <div className="min-h-screen bg-dark-bg">
         <main className="max-w-6xl mx-auto px-6 py-8">
-          <Link href="/dashboard" className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition">
-            <ArrowLeft size={20} />
+          <Link href="/dashboard" className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition text-sm">
+            <ArrowLeft size={18} />
             Back to Dashboard
           </Link>
-          <div className="bg-dark-bg-secondary rounded-lg border border-dark-border p-8 text-center">
-            <p className="text-dark-text-secondary text-lg">{error || 'Property not found'}</p>
+          <div className="bg-dark-bg-secondary rounded-2xl border border-dark-border/60 p-8 text-center">
+            <p className="text-dark-text-secondary">{error || 'Property not found'}</p>
           </div>
         </main>
       </div>
@@ -267,49 +272,49 @@ export default function PropertyDetailPage() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Back Button */}
-        <Link href="/dashboard" className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition">
-          <ArrowLeft size={20} />
+        <Link href="/dashboard" className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition text-sm">
+          <ArrowLeft size={18} />
           Back to Dashboard
         </Link>
 
         {/* Header with Price and Actions */}
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6 animate-in">
           <div className="min-w-0 flex-1">
-            <h1 className="text-2xl sm:text-4xl font-bold text-dark-text mb-2 break-words">{property.title}</h1>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-              <span className="text-xl sm:text-2xl font-bold text-accent-primary">{property.price}</span>
-              <span className="px-3 py-1 bg-accent-primary/10 text-accent-primary rounded-full text-xs sm:text-sm font-medium border border-accent-primary/30">
+            <h1 className="text-2xl sm:text-3xl font-bold text-dark-text mb-2 break-words tracking-tight">{property.title}</h1>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <span className="text-xl sm:text-2xl font-bold gradient-text">{property.price}</span>
+              <span className="px-3 py-1 bg-accent-primary/15 text-accent-primary rounded-full text-xs font-semibold">
                 {property.status}
               </span>
               {property.monthlyRent && (
-                <span className="text-xs sm:text-sm text-dark-text-secondary">Rent: {property.monthlyRent}/month</span>
+                <span className="text-xs text-dark-text-secondary bg-dark-bg-tertiary px-3 py-1 rounded-full">Rent: {property.monthlyRent}/month</span>
               )}
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 self-end sm:self-start">
+          <div className="flex gap-2 self-end sm:self-start">
             <button
               onClick={() => setIsFavorite(!isFavorite)}
-              className="p-3 bg-dark-bg-secondary rounded-full border border-dark-border hover:border-accent-primary/50 hover:bg-dark-bg-hover transition"
+              className="p-2.5 bg-dark-bg-secondary rounded-xl border border-dark-border/60 hover:border-accent-primary/40 hover:bg-dark-bg-hover transition"
             >
               <Heart
-                size={15}
+                size={16}
                 className={isFavorite ? 'text-red-400 fill-red-400' : 'text-dark-text-muted'}
               />
             </button>
-            <button className="p-3 bg-dark-bg-secondary rounded-full border border-dark-border hover:border-accent-primary/50 hover:bg-dark-bg-hover transition">
-              <Share2 size={15} className="text-dark-text-muted" />
+            <button className="p-2.5 bg-dark-bg-secondary rounded-xl border border-dark-border/60 hover:border-accent-primary/40 hover:bg-dark-bg-hover transition">
+              <Share2 size={16} className="text-dark-text-muted" />
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Image Gallery */}
-            <div className="bg-dark-bg-secondary rounded-lg overflow-hidden border border-dark-border shadow-dark-lg">
-              <div className="relative h-56 sm:h-96 bg-gradient-to-br from-dark-bg-tertiary via-dark-bg-secondary to-accent-primary/10">
+            <div className="bg-dark-bg-secondary rounded-2xl overflow-hidden border border-dark-border/60 shadow-dark-lg animate-in delay-1">
+              <div className="relative h-56 sm:h-96 bg-gradient-to-br from-dark-bg-tertiary via-dark-bg-secondary to-accent-primary/5">
                 <img
                   src={property.images[selectedImageIndex]}
                   alt={`Property view ${selectedImageIndex + 1}`}
@@ -318,13 +323,13 @@ export default function PropertyDetailPage() {
               </div>
 
               {/* Image Thumbnails */}
-              <div className="flex gap-2 p-4 bg-dark-bg-secondary border-t border-dark-border overflow-x-auto">
+              <div className="flex gap-2 p-4 bg-dark-bg-secondary border-t border-dark-border/40 overflow-x-auto">
                 {property.images.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 overflow-hidden transition ${
-                      selectedImageIndex === idx ? 'border-accent-primary' : 'border-dark-border hover:border-accent-primary/50'
+                    className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl border-2 overflow-hidden transition ${
+                      selectedImageIndex === idx ? 'border-accent-primary shadow-glow' : 'border-dark-border/40 hover:border-accent-primary/50'
                     }`}
                   >
                     <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
@@ -334,72 +339,86 @@ export default function PropertyDetailPage() {
             </div>
 
             {/* Tabs */}
-            <div className="bg-dark-bg-secondary rounded-lg border border-dark-border overflow-hidden">
-              <div className="flex border-b border-dark-border overflow-x-auto scrollbar-none whitespace-nowrap">
-                {['overview', 'amenities', 'location', 'Point of Contact'].map((tab) => (
+            <div className="bg-dark-bg-secondary rounded-2xl border border-dark-border/60 overflow-hidden animate-in delay-2">
+              {/* Tab bar with underline indicator */}
+              <div className="flex border-b border-dark-border/40 overflow-x-auto scrollbar-none whitespace-nowrap">
+                {tabs.map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`flex-1 py-3 sm:py-4 px-4 sm:px-6 font-medium text-center transition text-sm sm:text-base min-w-[100px] ${
+                    className={`flex-1 py-3.5 px-4 sm:px-6 font-medium text-center transition text-sm min-w-[100px] relative ${
                       activeTab === tab
-                        ? 'bg-accent-primary text-white'
+                        ? 'text-accent-primary'
                         : 'text-dark-text-secondary hover:text-dark-text'
                     }`}
                   >
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    {activeTab === tab && (
+                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-accent-primary rounded-full" />
+                    )}
                   </button>
                 ))}
               </div>
 
               {/* Tab Content */}
-              <div className="p-4 sm:p-6">
+              <div className="p-5 sm:p-6">
                 {activeTab === 'overview' && (
                   <div className="space-y-6">
                     {/* Quick Stats */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="bg-dark-bg-primary p-4 rounded-lg border border-dark-border">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Bed size={20} className="text-accent-primary" />
-                          <span className="text-dark-text-secondary text-sm">Bedrooms</span>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-dark-bg-primary/80 p-4 rounded-xl border border-dark-border/40">
+                        <div className="flex items-center gap-2.5 mb-2">
+                          <div className="w-8 h-8 rounded-lg bg-accent-primary/15 flex items-center justify-center">
+                            <Bed size={16} className="text-accent-primary" />
+                          </div>
+                          <span className="text-dark-text-secondary text-xs">Bedrooms</span>
                         </div>
-                        <p className="text-2xl font-bold text-dark-text">{property.bedrooms}</p>
+                        <p className="text-xl font-bold text-dark-text">{property.bedrooms}</p>
                       </div>
-                      <div className="bg-dark-bg-primary p-4 rounded-lg border border-dark-border">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Bath size={20} className="text-accent-primary" />
-                          <span className="text-dark-text-secondary text-sm">Bathrooms</span>
+                      <div className="bg-dark-bg-primary/80 p-4 rounded-xl border border-dark-border/40">
+                        <div className="flex items-center gap-2.5 mb-2">
+                          <div className="w-8 h-8 rounded-lg bg-accent-primary/15 flex items-center justify-center">
+                            <Bath size={16} className="text-accent-primary" />
+                          </div>
+                          <span className="text-dark-text-secondary text-xs">Bathrooms</span>
                         </div>
-                        <p className="text-2xl font-bold text-dark-text">{property.bathrooms}</p>
+                        <p className="text-xl font-bold text-dark-text">{property.bathrooms}</p>
                       </div>
-                      <div className="bg-dark-bg-primary p-4 rounded-lg border border-dark-border">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Maximize2 size={20} className="text-accent-primary" />
-                          <span className="text-dark-text-secondary text-sm">Area</span>
+                      <div className="bg-dark-bg-primary/80 p-4 rounded-xl border border-dark-border/40">
+                        <div className="flex items-center gap-2.5 mb-2">
+                          <div className="w-8 h-8 rounded-lg bg-accent-primary/15 flex items-center justify-center">
+                            <Maximize2 size={16} className="text-accent-primary" />
+                          </div>
+                          <span className="text-dark-text-secondary text-xs">Area</span>
                         </div>
-                        <p className="text-2xl font-bold text-dark-text">{property.area.toLocaleString()} sq.ft</p>
+                        <p className="text-xl font-bold text-dark-text">{property.area.toLocaleString()} sq.ft</p>
                       </div>
-                      <div className="bg-dark-bg-primary p-4 rounded-lg border border-dark-border">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Building2 size={20} className="text-accent-primary" />
-                          <span className="text-dark-text-secondary text-sm">Built Year</span>
+                      <div className="bg-dark-bg-primary/80 p-4 rounded-xl border border-dark-border/40">
+                        <div className="flex items-center gap-2.5 mb-2">
+                          <div className="w-8 h-8 rounded-lg bg-accent-primary/15 flex items-center justify-center">
+                            <Building2 size={16} className="text-accent-primary" />
+                          </div>
+                          <span className="text-dark-text-secondary text-xs">Built Year</span>
                         </div>
-                        <p className="text-2xl font-bold text-dark-text">{property.builtYear}</p>
+                        <p className="text-xl font-bold text-dark-text">{property.builtYear}</p>
                       </div>
                     </div>
 
                     {/* Description */}
                     <div>
-                      <h3 className="text-lg font-bold text-dark-text mb-3">About This Property</h3>
-                      <p className="text-dark-text-secondary leading-relaxed text-sm sm:text-base">{property.description}</p>
+                      <h3 className="text-base font-bold text-dark-text mb-2">About This Property</h3>
+                      <p className="text-dark-text-secondary leading-relaxed text-sm">{property.description}</p>
                     </div>
 
                     {/* Highlights */}
                     <div>
-                      <h3 className="text-lg font-bold text-dark-text mb-3">Property Highlights</h3>
+                      <h3 className="text-base font-bold text-dark-text mb-3">Property Highlights</h3>
                       <ul className="space-y-2">
                         {property.highlights?.map((highlight, idx) => (
-                          <li key={idx} className="flex items-start gap-3 text-dark-text-secondary text-sm sm:text-base">
-                            <span className="text-accent-primary text-xl leading-none">✓</span>
+                          <li key={idx} className="flex items-start gap-3 text-dark-text-secondary text-sm">
+                            <span className="w-5 h-5 rounded-full bg-accent-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="text-accent-primary text-xs">✓</span>
+                            </span>
                             <span>{highlight}</span>
                           </li>
                         ))}
@@ -410,12 +429,12 @@ export default function PropertyDetailPage() {
 
                 {activeTab === 'amenities' && (
                   <div>
-                    <h3 className="text-lg font-bold text-dark-text mb-4">Amenities & Features</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <h3 className="text-base font-bold text-dark-text mb-4">Amenities & Features</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {property.amenities.map((amenity, idx) => (
-                        <div key={idx} className="flex items-center gap-3 p-3 bg-dark-bg-primary rounded-lg border border-dark-border">
-                          <div className="w-2 h-2 bg-accent-primary rounded-full" />
-                          <span className="text-dark-text text-sm sm:text-base">{amenity}</span>
+                        <div key={idx} className="flex items-center gap-3 p-3 bg-dark-bg-primary/80 rounded-xl border border-dark-border/40">
+                          <div className="w-2 h-2 bg-accent-primary rounded-full shrink-0" />
+                          <span className="text-dark-text text-sm">{amenity}</span>
                         </div>
                       ))}
                     </div>
@@ -423,28 +442,34 @@ export default function PropertyDetailPage() {
                 )}
 
                 {activeTab === 'location' && (
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-bold text-dark-text mb-4">Location Details</h3>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3 p-3 bg-dark-bg-primary rounded-lg border border-dark-border">
-                        <MapPin size={20} className="text-accent-primary flex-shrink-0 mt-1" />
+                  <div className="space-y-3">
+                    <h3 className="text-base font-bold text-dark-text mb-4">Location Details</h3>
+                    <div className="space-y-2.5">
+                      <div className="flex items-start gap-3 p-3 bg-dark-bg-primary/80 rounded-xl border border-dark-border/40">
+                        <div className="w-8 h-8 rounded-lg bg-accent-primary/15 flex items-center justify-center shrink-0">
+                          <MapPin size={16} className="text-accent-primary" />
+                        </div>
                         <div>
-                          <p className="text-sm text-dark-text-secondary">Address</p>
-                          <p className="text-dark-text">{property.locality}, {property.city}, {property.state}</p>
+                          <p className="text-xs text-dark-text-muted">Address</p>
+                          <p className="text-dark-text text-sm">{property.locality}, {property.city}, {property.state}</p>
                         </div>
                       </div>
-                      <div className="flex items-start gap-3 p-3 bg-dark-bg-primary rounded-lg border border-dark-border">
-                        <MapPinIcon size={20} className="text-accent-primary flex-shrink-0 mt-1" />
+                      <div className="flex items-start gap-3 p-3 bg-dark-bg-primary/80 rounded-xl border border-dark-border/40">
+                        <div className="w-8 h-8 rounded-lg bg-accent-primary/15 flex items-center justify-center shrink-0">
+                          <MapPinIcon size={16} className="text-accent-primary" />
+                        </div>
                         <div>
-                          <p className="text-sm text-dark-text-secondary">Postal Code</p>
-                          <p className="text-dark-text">{property.pincode}</p>
+                          <p className="text-xs text-dark-text-muted">Postal Code</p>
+                          <p className="text-dark-text text-sm">{property.pincode}</p>
                         </div>
                       </div>
-                      <div className="flex items-start gap-3 p-3 bg-dark-bg-primary rounded-lg border border-dark-border">
-                        <Home size={20} className="text-accent-primary flex-shrink-0 mt-1" />
+                      <div className="flex items-start gap-3 p-3 bg-dark-bg-primary/80 rounded-xl border border-dark-border/40">
+                        <div className="w-8 h-8 rounded-lg bg-accent-primary/15 flex items-center justify-center shrink-0">
+                          <Home size={16} className="text-accent-primary" />
+                        </div>
                         <div>
-                          <p className="text-sm text-dark-text-secondary">Neighborhood</p>
-                          <p className="text-dark-text">{property.neighborhood}</p>
+                          <p className="text-xs text-dark-text-muted">Neighborhood</p>
+                          <p className="text-dark-text text-sm">{property.neighborhood}</p>
                         </div>
                       </div>
                     </div>
@@ -452,75 +477,71 @@ export default function PropertyDetailPage() {
                 )}
 
                 {activeTab === 'Point of Contact' && (
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {/* Agent Card */}
                     {property.agent ? (
-                      <div className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-start gap-4">
-                            <div className="w-16 h-16 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center">
-                              <Users size={32} className="text-white" />
+                      <div className="p-4 bg-dark-bg-primary/80 rounded-xl border border-dark-border/40">
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="w-14 h-14 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-xl flex items-center justify-center shadow-dark-sm shrink-0">
+                            <Users size={24} className="text-white" />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h4 className="text-base font-bold text-dark-text">{property.agent.name}</h4>
+                              {property.agent.verified && (
+                                <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-xs rounded-full flex items-center gap-1 font-medium">
+                                  <Award size={10} /> Verified
+                                </span>
+                              )}
                             </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <h4 className="text-lg font-bold text-dark-text">{property.agent.name}</h4>
-                                {property.agent.verified && (
-                                  <span className="px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded border border-green-500/30 flex items-center gap-1">
-                                    <Award size={12} /> Verified
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-sm text-dark-text-secondary">{property.agent.role}</p>
-                              <p className="text-xs text-dark-text-secondary mt-1">Lic. No: {property.agent.licenseNo}</p>
-                            </div>
+                            <p className="text-sm text-dark-text-secondary">{property.agent.role}</p>
+                            <p className="text-xs text-dark-text-muted mt-0.5">Lic. No: {property.agent.licenseNo}</p>
                           </div>
                         </div>
 
-                        <div className="space-y-2 pt-4 border-t border-dark-border">
-                          <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
-                            <Phone size={18} />
+                        <div className="space-y-2 pt-3 border-t border-dark-border/30">
+                          <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer text-sm">
+                            <Phone size={15} />
                             <span>{property.agent.contact}</span>
                           </div>
-                          <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
-                            <Mail size={18} />
+                          <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer text-sm">
+                            <Mail size={15} />
                             <span>{property.agent.email}</span>
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <div className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border">
-                        <p className="text-dark-text-secondary">No agent assigned for this property</p>
+                      <div className="p-4 bg-dark-bg-primary/80 rounded-xl border border-dark-border/40">
+                        <p className="text-dark-text-secondary text-sm">No agent assigned for this property</p>
                       </div>
                     )}
 
                     {/* Owner Card */}
-                    <div className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-start gap-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-accent-secondary to-accent-primary rounded-lg flex items-center justify-center">
-                            <Home size={32} className="text-white" />
+                    <div className="p-4 bg-dark-bg-primary/80 rounded-xl border border-dark-border/40">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="w-14 h-14 bg-gradient-to-br from-accent-secondary to-accent-primary rounded-xl flex items-center justify-center shadow-dark-sm shrink-0">
+                          <Home size={24} className="text-white" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="text-base font-bold text-dark-text">{property.owner.name}</h4>
+                            {property.owner.verified && (
+                              <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-xs rounded-full flex items-center gap-1 font-medium">
+                                <Award size={10} /> Verified
+                              </span>
+                            )}
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <h4 className="text-lg font-bold text-dark-text">{property.owner.name}</h4>
-                              {property.owner.verified && (
-                                <span className="px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded border border-green-500/30 flex items-center gap-1">
-                                  <Award size={12} /> Verified
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-dark-text-secondary">{property.owner.role}</p>
-                          </div>
+                          <p className="text-sm text-dark-text-secondary">{property.owner.role}</p>
                         </div>
                       </div>
 
-                      <div className="space-y-2 pt-4 border-t border-dark-border">
-                        <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
-                          <Phone size={18} />
+                      <div className="space-y-2 pt-3 border-t border-dark-border/30">
+                        <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer text-sm">
+                          <Phone size={15} />
                           <span>{property.owner.contact}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer">
-                          <Mail size={18} />
+                        <div className="flex items-center gap-3 text-dark-text-secondary hover:text-accent-primary transition cursor-pointer text-sm">
+                          <Mail size={15} />
                           <span>{property.owner.email}</span>
                         </div>
                       </div>
@@ -532,46 +553,46 @@ export default function PropertyDetailPage() {
           </div>
 
           {/* Right Column - Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             {/* Quick Info Card */}
-            <div className="bg-dark-bg-secondary rounded-lg border border-dark-border p-6 shadow-dark-lg">
-              <h3 className="text-lg font-bold text-dark-text mb-4">Property Type</h3>
+            <div className="bg-dark-bg-secondary rounded-2xl border border-dark-border/60 p-5 shadow-dark-lg animate-in delay-2">
+              <h3 className="text-base font-bold text-dark-text mb-4">Property Type</h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center pb-3 border-b border-dark-border">
-                  <span className="text-dark-text-secondary">Type</span>
-                  <span className="text-dark-text font-medium">{property.type}</span>
+                <div className="flex justify-between items-center pb-3 border-b border-dark-border/40">
+                  <span className="text-dark-text-secondary text-sm">Type</span>
+                  <span className="text-dark-text font-medium text-sm">{property.type}</span>
                 </div>
-                <div className="flex justify-between items-center pb-3 border-b border-dark-border">
-                  <span className="text-dark-text-secondary">Available For</span>
-                  <span className="text-dark-text font-medium">{property.availableFor}</span>
+                <div className="flex justify-between items-center pb-3 border-b border-dark-border/40">
+                  <span className="text-dark-text-secondary text-sm">Available For</span>
+                  <span className="text-dark-text font-medium text-sm">{property.availableFor}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-dark-text-secondary">Status</span>
-                  <span className="px-2 py-1 bg-green-500/10 text-green-400 text-sm rounded font-medium">{property.status}</span>
+                  <span className="text-dark-text-secondary text-sm">Status</span>
+                  <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-full font-medium">{property.status}</span>
                 </div>
               </div>
             </div>
 
             {/* Contact Card */}
-            <div className="bg-dark-bg-secondary rounded-lg border border-dark-border p-6 shadow-dark-lg">
-              <h3 className="text-lg font-bold text-dark-text mb-4">Get In Touch</h3>
+            <div className="bg-dark-bg-secondary rounded-2xl border border-dark-border/60 p-5 shadow-dark-lg animate-in delay-3">
+              <h3 className="text-base font-bold text-dark-text mb-4">Get In Touch</h3>
               <button
                 onClick={() => setShowContactForm(!showContactForm)}
-                className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-3 px-4 rounded-lg transition shadow-dark-md mb-3"
+                className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-3 px-4 rounded-xl transition shadow-dark-sm hover:shadow-glow mb-3 text-sm"
               >
                 Contact Now
               </button>
               <button
                 type="button"
                 onClick={() => setShowTourForm(true)}
-                className="w-full bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold py-3 px-4 rounded-lg transition border border-dark-border flex items-center justify-center gap-2"
+                className="w-full bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold py-3 px-4 rounded-xl transition border border-dark-border/60 flex items-center justify-center gap-2 text-sm"
               >
-                <Calendar size={18} />
+                <Calendar size={16} />
                 Schedule Tour
               </button>
 
               {showContactForm && (
-                <form onSubmit={handleContactSubmit} className="mt-4 space-y-3 pt-4 border-t border-dark-border">
+                <form onSubmit={handleContactSubmit} className="mt-4 space-y-3 pt-4 border-t border-dark-border/40">
                   <input
                     type="text"
                     name="name"
@@ -579,7 +600,7 @@ export default function PropertyDetailPage() {
                     value={contactData.name}
                     onChange={handleContactChange}
                     required
-                    className="w-full px-3 py-2 bg-dark-bg-primary border border-dark-border rounded-lg text-dark-text placeholder-dark-text-muted focus:outline-none focus:border-accent-primary"
+                    className={inputClass}
                   />
                   <input
                     type="email"
@@ -588,7 +609,7 @@ export default function PropertyDetailPage() {
                     value={contactData.email}
                     onChange={handleContactChange}
                     required
-                    className="w-full px-3 py-2 bg-dark-bg-primary border border-dark-border rounded-lg text-dark-text placeholder-dark-text-muted focus:outline-none focus:border-accent-primary"
+                    className={inputClass}
                   />
                   <input
                     type="tel"
@@ -597,7 +618,7 @@ export default function PropertyDetailPage() {
                     value={contactData.phone}
                     onChange={handleContactChange}
                     required
-                    className="w-full px-3 py-2 bg-dark-bg-primary border border-dark-border rounded-lg text-dark-text placeholder-dark-text-muted focus:outline-none focus:border-accent-primary"
+                    className={inputClass}
                   />
                   <textarea
                     name="message"
@@ -605,9 +626,9 @@ export default function PropertyDetailPage() {
                     value={contactData.message}
                     onChange={handleContactChange}
                     rows="3"
-                    className="w-full px-3 py-2 bg-dark-bg-primary border border-dark-border  rounded-lg text-dark-text placeholder-dark-text-muted focus:outline-none focus:border-accent-primary resize-none"
+                    className={inputClass + ' resize-none'}
                   />
-                  <button type="submit" className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2 rounded-lg transition">
+                  <button type="submit" className="w-full bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2.5 rounded-xl transition text-sm">
                     Send Message
                   </button>
                 </form>
@@ -620,7 +641,7 @@ export default function PropertyDetailPage() {
 
     {showTourForm && (
       <div
-        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
         onMouseDown={(e) => {
           if (e.target === e.currentTarget) closeTourForm();
         }}
@@ -629,11 +650,11 @@ export default function PropertyDetailPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="tour-dialog-title"
-          className="w-full max-w-md rounded-lg border border-dark-border bg-dark-bg-secondary p-6 shadow-dark-xl"
+          className="w-full max-w-md rounded-2xl border border-dark-border/60 bg-dark-bg-secondary p-6 shadow-dark-xl slide-down"
         >
           <div className="mb-6 flex items-start justify-between gap-4">
             <div>
-              <h2 id="tour-dialog-title" className="text-2xl font-bold text-dark-text">
+              <h2 id="tour-dialog-title" className="text-xl font-bold text-dark-text">
                 Schedule a Tour
               </h2>
               <p className="mt-1 text-sm text-dark-text-secondary">
@@ -644,16 +665,16 @@ export default function PropertyDetailPage() {
               type="button"
               onClick={closeTourForm}
               aria-label="Close schedule tour form"
-              className="rounded-lg p-2 text-dark-text-muted transition hover:bg-dark-bg-hover hover:text-dark-text"
+              className="rounded-xl p-2 text-dark-text-muted transition hover:bg-dark-bg-hover hover:text-dark-text"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
           {tourSubmitted ? (
             <div className="space-y-5">
-              <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-4">
-                <p className="font-semibold text-green-400">Tour request prepared</p>
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+                <p className="font-semibold text-emerald-400">Tour request prepared</p>
                 <p className="mt-1 text-sm text-dark-text-secondary">
                   Your visit is set for {tourData.visitDate} at {tourData.visitTime}. It is ready to be sent when the API is connected.
                 </p>
@@ -661,7 +682,7 @@ export default function PropertyDetailPage() {
               <button
                 type="button"
                 onClick={closeTourForm}
-                className="w-full rounded-lg bg-accent-primary px-4 py-3 font-semibold text-white transition hover:bg-accent-dark"
+                className="w-full rounded-xl bg-accent-primary px-4 py-3 font-semibold text-white transition hover:bg-accent-dark text-sm"
               >
                 Done
               </button>
@@ -670,7 +691,7 @@ export default function PropertyDetailPage() {
             <form onSubmit={handleTourSubmit} noValidate className="space-y-5">
               <div>
                 <label htmlFor="visitDate" className="mb-2 flex items-center gap-2 text-sm font-medium text-dark-text">
-                  <Calendar size={17} className="text-accent-primary" />
+                  <Calendar size={15} className="text-accent-primary" />
                   Visit date
                 </label>
                 <input
@@ -682,8 +703,8 @@ export default function PropertyDetailPage() {
                   onChange={handleTourChange}
                   aria-invalid={Boolean(tourErrors.visitDate)}
                   aria-describedby={tourErrors.visitDate ? 'visit-date-error' : undefined}
-                  className={`w-full rounded-lg border bg-dark-bg-primary px-3 py-3 text-dark-text outline-none transition [color-scheme:dark] focus:ring-2 focus:ring-accent-primary/30 ${
-                    tourErrors.visitDate ? 'border-red-500' : 'border-dark-border focus:border-accent-primary'
+                  className={`${inputClass} [color-scheme:dark] ${
+                    tourErrors.visitDate ? 'border-red-500' : ''
                   }`}
                 />
                 {tourErrors.visitDate && (
@@ -693,7 +714,7 @@ export default function PropertyDetailPage() {
 
               <div>
                 <label htmlFor="visitTime" className="mb-2 flex items-center gap-2 text-sm font-medium text-dark-text">
-                  <Clock size={17} className="text-accent-primary" />
+                  <Clock size={15} className="text-accent-primary" />
                   Visit time
                 </label>
                 <select
@@ -703,8 +724,8 @@ export default function PropertyDetailPage() {
                   onChange={handleTourChange}
                   aria-invalid={Boolean(tourErrors.visitTime)}
                   aria-describedby={tourErrors.visitTime ? 'visit-time-error' : 'visit-time-help'}
-                  className={`w-full rounded-lg border bg-dark-bg-primary px-3 py-3 text-dark-text outline-none transition focus:ring-2 focus:ring-accent-primary/30 ${
-                    tourErrors.visitTime ? 'border-red-500' : 'border-dark-border focus:border-accent-primary'
+                  className={`${inputClass} ${
+                    tourErrors.visitTime ? 'border-red-500' : ''
                   }`}
                 >
                   <option value="">Select a visit time</option>
@@ -724,7 +745,7 @@ export default function PropertyDetailPage() {
               </div>
 
               {tourErrors.submit && (
-                <p className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+                <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
                   {tourErrors.submit}
                 </p>
               )}
@@ -733,14 +754,14 @@ export default function PropertyDetailPage() {
                 <button
                   type="button"
                   onClick={closeTourForm}
-                  className="flex-1 rounded-lg border border-dark-border bg-dark-bg-tertiary px-4 py-3 font-semibold text-dark-text transition hover:bg-dark-bg-hover"
+                  className="flex-1 rounded-xl border border-dark-border/60 bg-dark-bg-tertiary px-4 py-3 font-semibold text-dark-text transition hover:bg-dark-bg-hover text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isTourSubmitting}
-                  className="flex-1 rounded-lg bg-accent-primary px-4 py-3 font-semibold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex-1 rounded-xl bg-accent-primary px-4 py-3 font-semibold text-white transition hover:bg-accent-dark hover:shadow-glow disabled:cursor-not-allowed disabled:opacity-60 text-sm"
                 >
                   {isTourSubmitting ? 'Scheduling...' : 'Submit Request'}
                 </button>

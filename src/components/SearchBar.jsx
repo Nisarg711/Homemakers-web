@@ -1,9 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { MapPin, Search } from 'lucide-react';
+import { MapPin, Search, X } from 'lucide-react';
 import { useRef } from 'react';
 import { useRouter } from "next/navigation";
-import { X } from 'lucide-react';
+
 const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }) => {
   const [activeFilter, setActiveFilter] = useState('buy');
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,8 +23,6 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
     async function fetchsuggestions() {
       setSuggestionsLoading(true);
       try {
-        /*encodeURIComponent(searchQuery) — without it, queries containing spaces or
-         special characters could break the URL. */
         const trimmedQuery = searchQuery.trim();
         const result = await fetch(`/api/search/suggestions?query=${encodeURIComponent(trimmedQuery)}`);
         const res = await result.json();
@@ -42,7 +40,7 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
     const timer = setTimeout(() => {
       fetchsuggestions();
     }, 300);
-    return () => clearTimeout(timer);  // ← add this
+    return () => clearTimeout(timer);
   }, [searchQuery]);
 
   useEffect(() => {
@@ -54,6 +52,7 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
   const handleSearch = async () => {
     if (selectedLocations.length === 0) {
       console.log('No locations selected');
@@ -68,20 +67,19 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
       });
       const data = await res.json();
       console.log("Search results: ", data);
-      // Store results so the results page can read them
       sessionStorage.setItem('searchResults', JSON.stringify(data.properties));
-       router.push('/search/results');
+      router.push('/search/results');
     } catch (err) {
       console.error('Search failed:', err);
     }
   };
+
   const handlesuggestionClick = (suggestion) => {
     if (suggestion.type == "property") {
       setShowSuggestions(false);
       router.push(`/property/${suggestion.apn}`);
     }
     if (suggestion.type == "city") {
-      //Will do it later
       const city = {
         "city": suggestion.label,
         "state": suggestion.subtitle
@@ -95,26 +93,30 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
       }
     }
   }
+
   useEffect(() => {
     console.log("check:", selectedLocations)
   }, [selectedLocations])
-  return (
-    <div className="w-full bg-dark-bg-secondary/95 shadow-dark-xl rounded-lg overflow-visible mx-auto max-w-6xl -mt-8 relative z-20 border border-dark-border backdrop-blur-xs">
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-4">
 
-        {/* Filter Buttons */}
-        <div className="flex gap-2 sm:border-r border-dark-border sm:pr-6 shrink-0">
-          {[
-            { id: 'buy', label: 'Buy' },
-            { id: 'rent', label: 'Rent' },
-            { id: 'Both', label: 'Both' },
-          ].map((filter) => (
+  const filters = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'rent', label: 'Rent' },
+    { id: 'Both', label: 'Both' },
+  ];
+
+  return (
+    <div className="w-full glass-card shadow-dark-xl rounded-2xl overflow-visible mx-auto max-w-6xl -mt-8 relative z-20">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center px-4 sm:px-6 py-4 gap-3 sm:gap-4">
+
+        {/* Filter Buttons — pill style */}
+        <div className="flex gap-1.5 sm:border-r border-dark-border sm:pr-5 shrink-0">
+          {filters.map((filter) => (
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm transition ${activeFilter === filter.id
-                  ? 'bg-accent-primary text-white shadow-dark-md'
-                  : 'bg-dark-bg-tertiary text-dark-text-secondary hover:bg-dark-bg-hover'
+              className={`px-4 py-2 rounded-full font-semibold text-sm transition-all ${activeFilter === filter.id
+                  ? 'bg-accent-primary text-white shadow-glow'
+                  : 'bg-dark-bg-tertiary/80 text-dark-text-secondary hover:bg-dark-bg-hover hover:text-dark-text'
                 }`}
             >
               {filter.label}
@@ -123,7 +125,7 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
         </div>
 
         {/* Search Input + Action Buttons row */}
-        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           {/* Search Input */}
           <div className="flex-1 relative min-w-0" ref={searchContainerRef}>
             {selectedLocations.length > 0 && (
@@ -131,37 +133,47 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
                 {selectedLocations.map((loc, idx) => (
                   <span
                     key={`${loc.city}-${idx}`}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 bg-accent-primary/10 text-accent-primary text-xs sm:text-sm rounded-full border border-accent-primary/30"
+                    className="flex items-center gap-1.5 px-3 py-1 bg-accent-primary/10 text-accent-primary text-xs sm:text-sm rounded-full border border-accent-primary/25 font-medium"
                   >
                     {loc.city}
-                    <button onClick={() => {
-                      setSelectedLocations(selectedLocations.filter((ele) => {
-                        return ele.city !== loc.city;
-                      }))
-                    }}>
-                      <X size={14} />
+                    <button
+                      onClick={() => {
+                        setSelectedLocations(selectedLocations.filter((ele) => {
+                          return ele.city !== loc.city;
+                        }))
+                      }}
+                      className="hover:text-accent-dark transition"
+                    >
+                      <X size={12} />
                     </button>
                   </span>
                 ))}
               </div>
             )}
-            <input
-              type="text"
-              placeholder={
-                userAddress
-                  ? `${userAddress.suburb || userAddress.city || 'Search based on City or title of Property'}`
-                  : "Search by locality, project, or landmark"
-              }
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full bg-transparent focus:outline-none placeholder:text-dark-text-muted text-dark-text text-sm sm:text-base"
-            />
-            {/* dropdown goes here, absolutely positioned */}
+            <div className="relative">
+              <Search size={16} className="absolute left-0 top-1/2 -translate-y-1/2 text-dark-text-muted" />
+              <input
+                type="text"
+                placeholder={
+                  userAddress
+                    ? `${userAddress.suburb || userAddress.city || 'Search based on City or title of Property'}`
+                    : "Search by locality, project, or landmark"
+                }
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="w-full pl-6 bg-transparent focus:outline-none placeholder:text-dark-text-muted text-dark-text text-sm sm:text-base"
+              />
+            </div>
+            {/* Suggestions dropdown */}
             {showSuggestions && (
-              <div className="absolute top-full left-0 mt-2 w-full bg-dark-bg-tertiary rounded-lg shadow-dark-xl border border-dark-border max-h-72 overflow-y-auto z-50">
+              <div className="absolute top-full left-0 mt-3 w-full glass-card rounded-xl shadow-dark-xl max-h-72 overflow-y-auto z-50 slide-down">
                 {suggestionsLoading ? (
-                  <p className="text-dark-text-muted text-sm text-center py-4">Searching...</p>
+                  <div className="p-4 space-y-2">
+                    <div className="skeleton h-5 w-3/4" />
+                    <div className="skeleton h-5 w-1/2" />
+                    <div className="skeleton h-5 w-2/3" />
+                  </div>
                 ) : suggestions.length > 0 ? (
                   <div className="py-2">
                     {suggestions.map((suggestion, idx) => (
@@ -171,7 +183,7 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
                           handlesuggestionClick(suggestion);
                           console.log(suggestion)
                         }}
-                        className="w-full flex items-center justify-between gap-3 text-left px-4 py-2.5 hover:bg-dark-bg-hover transition"
+                        className="w-full flex items-center justify-between gap-3 text-left px-4 py-2.5 hover:bg-dark-bg-hover/80 transition"
                       >
                         <div className="min-w-0">
                           <span className="block text-dark-text font-medium text-sm truncate">
@@ -182,9 +194,9 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
                           </span>
                         </div>
                         <span
-                          className={`flex-shrink-0 text-xs px-2 py-0.5 rounded-full border ${suggestion.type === 'property'
-                              ? 'bg-accent-primary/10 text-accent-primary border-accent-primary/30'
-                              : 'bg-dark-bg-secondary text-dark-text-secondary border-dark-border'
+                          className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full font-medium ${suggestion.type === 'property'
+                              ? 'bg-accent-primary/15 text-accent-primary'
+                              : 'bg-dark-bg-tertiary text-dark-text-secondary'
                             }`}
                         >
                           {suggestion.type === 'property' ? 'Property' : 'City'}
@@ -203,26 +215,29 @@ const SearchBar = ({ onLocationRequest, location, locationLoading, userAddress }
           <button
             onClick={onLocationRequest}
             disabled={locationLoading}
-            className={`p-2 hover:bg-dark-bg-hover rounded-lg transition shrink-0 ${location ? 'text-green-400' : 'text-accent-primary'
+            className={`p-2.5 rounded-xl transition shrink-0 border ${location
+              ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10'
+              : 'text-accent-primary border-dark-border hover:bg-dark-bg-hover hover:border-accent-primary/30'
               } disabled:opacity-50`}
           >
-            <MapPin size={20} className="sm:w-[22px] sm:h-[22px]" />
+            <MapPin size={18} />
           </button>
 
           {/* Search Button */}
           <button
             onClick={handleSearch}
-            className="p-2 bg-accent-primary hover:bg-accent-dark text-white rounded-lg transition shadow-dark-md shrink-0"
+            className="p-2.5 bg-accent-primary hover:bg-accent-dark text-white rounded-xl transition shadow-dark-md hover:shadow-glow shrink-0"
           >
-            <Search size={20} className="sm:w-[22px] sm:h-[22px]" />
+            <Search size={18} />
           </button>
         </div>
       </div>
 
       {/* Address display when location is detected */}
       {userAddress && (
-        <div className="px-4 sm:px-6 pb-2 text-xs text-green-400">
-          📍 {userAddress.suburb || userAddress.neighbourhood} {userAddress.city || userAddress.village}, {userAddress.state}, {userAddress.country}
+        <div className="px-4 sm:px-6 pb-3 flex items-center gap-2 text-xs text-emerald-400">
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          {userAddress.suburb || userAddress.neighbourhood} {userAddress.city || userAddress.village}, {userAddress.state}, {userAddress.country}
         </div>
       )}
     </div>

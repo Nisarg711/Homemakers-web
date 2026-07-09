@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Search } from "lucide-react";
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -54,26 +55,17 @@ export default function ChatWidget() {
     ]);
 
     try {
-      // let url = `/api/chat?message=${encodeURIComponent(userInput)}`;
       let url = `https://homemakers-latest.onrender.com/chat_stream/${encodeURIComponent(userInput)}`;
       if (checkpointId) {
         url += `?checkpoint_id=${encodeURIComponent(checkpointId)}`;
       }
-      //EventSource used to connect to SSE endpoint
       const eventSource = new EventSource(url);
-      /*The moment this line runs, the browser opens an HTTP GET connection to your FastAPI 
-      route and keeps it open — it doesn't expect one response and close, 
-      it expects a continuous trickle of data: ...\n\n chunks for as long as the server 
-      keeps sending them.
-    EventSource is a built-in browser API specifically designed to consume the
-       text/event-stream format your FastAPI route produces.*/
       let streamedContent = "";
       let searchData = null;
 
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          //console.log("Visible and received is: ",data);
           if (data.type === "checkpoint") {
             setCheckpointId(data.checkpoint_id);
           }
@@ -146,7 +138,6 @@ export default function ChatWidget() {
           }
 
           else if (data.type === "end") {
-            // Add 'writing' stage when stream ends
             if (searchData) {
               const finalSearchInfo = {
                 ...searchData,
@@ -229,12 +220,12 @@ export default function ChatWidget() {
     return (
       <div className="mt-2 space-y-1">
         {searchInfo.stages.map((stage, i) => (
-          <div key={i} className="text-xs text-dark-text-secondary flex items-center gap-1">
+          <div key={i} className="text-xs text-dark-text-muted flex items-center gap-1">
             <span>{stageLabels[stage] || stage}</span>
           </div>
         ))}
         {searchInfo.urls.length > 0 && (
-          <div className="mt-1 space-y-1">
+          <div className="mt-1.5 space-y-1">
             <p className="text-xs text-dark-text-secondary font-medium">Sources:</p>
             {searchInfo.urls.slice(0, 3).map((url, i) => (
               <a
@@ -256,24 +247,30 @@ export default function ChatWidget() {
   return (
     <div className={`fixed z-50 ${open ? 'inset-0 sm:inset-auto sm:bottom-6 sm:right-6' : 'bottom-4 right-4 sm:bottom-6 sm:right-6'}`}>
       {open && (
-        <div className="w-full sm:w-96 h-full sm:h-[520px] bg-dark-bg-secondary sm:border border-dark-border sm:rounded-xl shadow-dark-xl flex flex-col sm:mb-4">
+        <div className="w-full sm:w-96 h-full sm:h-[520px] bg-dark-bg-secondary sm:border border-dark-border/60 sm:rounded-2xl shadow-dark-xl flex flex-col sm:mb-4 overflow-hidden">
 
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-dark-border">
-            <div>
-              <h3 className="font-semibold text-dark-text text-sm">Homemakers Assistant</h3>
-              <p className="text-xs text-dark-text-secondary">Powered by AI</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleNewConversation}
-                className="text-xs text-dark-text-secondary hover:text-accent-primary transition"
-              >
-                New chat
-              </button>
-              <button onClick={() => setOpen(false)}>
-                <X size={18} className="text-dark-text-secondary" />
-              </button>
+          {/* Header — gradient bar */}
+          <div className="relative">
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-primary via-accent-light to-accent-secondary" />
+            <div className="flex items-center justify-between p-4 border-b border-dark-border/50">
+              <div>
+                <h3 className="font-semibold text-dark-text text-sm">Homemakers Assistant</h3>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <p className="text-xs text-dark-text-muted">Powered by AI</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleNewConversation}
+                  className="text-xs text-dark-text-secondary hover:text-accent-primary transition px-2 py-1 rounded-lg hover:bg-dark-bg-hover"
+                >
+                  New chat
+                </button>
+                <button onClick={() => setOpen(false)} className="p-1.5 rounded-lg hover:bg-dark-bg-hover transition">
+                  <X size={16} className="text-dark-text-secondary" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -282,20 +279,20 @@ export default function ChatWidget() {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}
+                className={`flex ${msg.isUser ? "justify-end" : "justify-start"} animate-in`}
               >
                 <div
-                  className={`max-w-[85%] px-3 py-2 rounded-lg text-sm whitespace-pre-wrap ${msg.isUser
-                    ? "bg-accent-primary text-white"
-                    : "bg-dark-bg-tertiary text-dark-text"
+                  className={`max-w-[85%] px-3.5 py-2.5 text-sm whitespace-pre-wrap ${msg.isUser
+                    ? "bg-accent-primary text-white rounded-2xl rounded-br-md"
+                    : "bg-dark-bg-tertiary text-dark-text rounded-2xl rounded-bl-md border border-dark-border/30"
                     }`}
                 >
                   {/* Loading dots */}
                   {msg.isLoading && !msg.content ? (
                     <div className="flex gap-1 items-center py-1">
-                      <span className="w-1.5 h-1.5 bg-dark-text-secondary rounded-full animate-bounce [animation-delay:0ms]" />
-                      <span className="w-1.5 h-1.5 bg-dark-text-secondary rounded-full animate-bounce [animation-delay:150ms]" />
-                      <span className="w-1.5 h-1.5 bg-dark-text-secondary rounded-full animate-bounce [animation-delay:300ms]" />
+                      <span className="w-1.5 h-1.5 bg-dark-text-muted rounded-full animate-bounce [animation-delay:0ms]" />
+                      <span className="w-1.5 h-1.5 bg-dark-text-muted rounded-full animate-bounce [animation-delay:150ms]" />
+                      <span className="w-1.5 h-1.5 bg-dark-text-muted rounded-full animate-bounce [animation-delay:300ms]" />
                     </div>
                   ) : (
                     <>
@@ -316,17 +313,17 @@ export default function ChatWidget() {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-dark-border flex gap-2 pb-6 sm:pb-4">
+          <div className="p-4 border-t border-dark-border/50 flex gap-2 pb-6 sm:pb-4">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Ask about properties..."
-              className="flex-1 bg-dark-bg-primary text-dark-text border border-dark-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-accent-primary"
+              className="flex-1 bg-dark-bg-primary text-dark-text border border-dark-border/60 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary transition placeholder:text-dark-text-muted"
             />
             <button
               onClick={sendMessage}
-              className="bg-accent-primary text-white p-2 rounded-lg hover:bg-accent-dark transition"
+              className="bg-accent-primary text-white p-2.5 rounded-xl hover:bg-accent-dark transition hover:shadow-glow"
             >
               <Send size={16} />
             </button>
@@ -334,13 +331,13 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {/* Toggle Button */}
+      {/* Toggle Button — pulse glow FAB */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="bg-accent-primary text-white p-3.5 sm:p-4 rounded-full shadow-dark-xl hover:bg-accent-dark transition flex items-center justify-center"
+          className="bg-gradient-to-br from-accent-primary to-accent-secondary text-white p-4 rounded-2xl shadow-dark-xl hover:shadow-glow transition-shadow flex items-center justify-center pulse-glow"
         >
-          <MessageCircle size={22} className="sm:w-6 sm:h-6" />
+          <MessageCircle size={22} />
         </button>
       )}
     </div>

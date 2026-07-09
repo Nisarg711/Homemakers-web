@@ -1,17 +1,6 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionWrapper from "@/components/sessionprovider";
 import { AppointmentsProvider } from "@/context/AppointmentsContext";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "Homemakers - A real estate management system",
@@ -25,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className="h-full antialiased"
       suppressHydrationWarning
     >
       <head>
@@ -42,7 +31,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-dark-bg text-dark-text">
+      <body className="min-h-full flex flex-col bg-dark-bg text-dark-text font-sans">
         <SessionWrapper>
           <AppointmentsProvider>
             {children}

@@ -12,9 +12,9 @@ export const GET = async (request) => {
     try{
         const tavilykey= process.env.TAVILY_KEY
         const tvly = tavily({ apiKey: tavilykey });
-        const response = await tvly.search("Give me only three (3) latest news about real estate in India");
+        //const response = await tvly.search("Give me only three (3) latest news about real estate in India");
         
-       // const response=[{title: "Sample News Title", url: "https://example.com/news1", content: "Sample news content."}]
+       const response=[{title: "Sample News Title", url: "https://example.com/news1", content: "Sample news content."}]
         return new Response(JSON.stringify({response}), {status: 200})
     }
     catch(error){

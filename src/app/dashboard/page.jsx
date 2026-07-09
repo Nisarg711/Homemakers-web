@@ -173,7 +173,10 @@ useEffect(()=>{
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-bg">
-        <p className="text-dark-text-secondary text-lg">Loading...</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full border-2 border-accent-primary border-t-transparent animate-spin" />
+          <p className="text-dark-text-secondary text-sm font-medium">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -206,94 +209,155 @@ useEffect(()=>{
 
       {/* Hero Section */}
       <div
-        className="relative h-48 sm:h-64 flex items-center justify-center overflow-hidden bg-cover bg-center"
+        className="relative h-56 sm:h-72 flex items-center justify-center overflow-hidden bg-cover bg-center"
         style={{ backgroundImage: 'url(/cover.png)' }}
       >
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="text-center relative z-10 px-4">
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-2 sm:mb-4">
+        {/* Gradient mesh overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-accent-dark/30 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-transparent to-transparent" />
+
+        <div className="text-center relative z-10 px-4 animate-in">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">
             Find Your Perfect Home
           </h1>
-          <p className="text-sm sm:text-lg text-white/80">
-            Welcome back, {session.user.name}
+          <p className="text-sm sm:text-base text-white/70 font-medium">
+            Welcome back, <span className="text-white">{session.user.name}</span>
           </p>
         </div>
       </div>
 
       {/* Search Bar Section */}
-      <div className="px-4 sm:px-6 pb-8 sm:pb-12">
+      <div className="px-4 sm:px-6 pb-10 sm:pb-14">
         <SearchBar onLocationRequest={getLocation} location={location}
         locationLoading={loading}
         userAddress={userAddress} />
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <section className="mb-8 sm:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dark-text mb-1 sm:mb-2">Recommended for You</h2>
-          <p className="text-xs sm:text-sm text-dark-text-secondary mb-6 sm:mb-8">Properties based on your entered location</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {topnearbyProperties.length > 0 && topnearbyProperties.map((property) => (
-              <PropertyCard key={property.apn} property={
-                {
-                  "apn": property.apn,
-                  "title": property.title,
-                  "location": `${property.localAddress}, ${property.city}, ${property.state}`,
-                  "price": "₹" + (property.rent?.monthlyRent || property.sell?.price || 'Price on request'),
-                  "bedrooms": 'N/A',
-                  "bathrooms": 'N/A',
-                  "area": `${property.area} sq.ft`,
-                  "availableFor": property.availableFor,
-                }
-              } />
-            ))}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        {/* Recommended Properties */}
+        <section className="mb-12 sm:mb-16">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-dark-text section-header">Recommended for You</h2>
+            <p className="text-xs sm:text-sm text-dark-text-secondary mt-3">Properties based on your entered location</p>
           </div>
-        </section>
-
-        <section className="mb-8 sm:mb-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Top Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {topArticles.length > 0 ? (
-              topArticles.map((article, index) => (
-                <ArticleCard key={article.url || index} article={article} />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-8 text-dark-text-secondary">
-                <p>Loading latest articles...</p>
+            {topnearbyProperties.length > 0 ? topnearbyProperties.map((property, index) => (
+              <div key={property.apn} className={`delay-${index + 1}`}>
+                <PropertyCard property={
+                  {
+                    "apn": property.apn,
+                    "title": property.title,
+                    "location": `${property.localAddress}, ${property.city}, ${property.state}`,
+                    "price": "₹" + (property.rent?.monthlyRent || property.sell?.price || 'Price on request'),
+                    "bedrooms": 'N/A',
+                    "bathrooms": 'N/A',
+                    "area": `${property.area} sq.ft`,
+                    "availableFor": property.availableFor,
+                  }
+                } />
+              </div>
+            )) : (
+              <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="rounded-2xl border border-dark-border/40 p-5 space-y-4">
+                    <div className="skeleton h-40 w-full rounded-xl" />
+                    <div className="skeleton h-5 w-1/3" />
+                    <div className="skeleton h-4 w-2/3" />
+                    <div className="skeleton h-4 w-1/2" />
+                  </div>
+                ))}
               </div>
             )}
           </div>
         </section>
-        {
-           (Object.keys(demandmap).length > 0)? <section className="mb-8 sm:mb-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Demand in {selectedLocation.city}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <DemandCard category={{ title: 'Apartments', subtitle: 'Most searched localities for Apartments' }} locations={demandData["Apartment"]} />
-            <DemandCard category={{ title: 'Villas', subtitle: 'Most searched societies for Plots' }} locations={demandData["villa"]} />
-            <DemandCard category={{ title: 'Independent House', subtitle: 'Most searched localities for Houses' }} locations={demandData["Independent House"]} />
-          </div>
-        </section>:<></>
-        }
-       
 
-        <section className="mb-8 sm:mb-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Our Users</h2>
+        {/* Top Articles */}
+        <section className="mb-12 sm:mb-16">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-dark-text section-header">Top Articles</h2>
+            <p className="text-xs sm:text-sm text-dark-text-secondary mt-3">Latest real estate news and insights</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {userData.map((user) => (
-              <UserCard key={user.id} userType={user} />
+            {topArticles.length > 0 ? (
+              topArticles.map((article, index) => (
+                <div key={article.url || index} className={`delay-${index + 1}`}>
+                  <ArticleCard article={article} />
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="rounded-2xl border border-dark-border/40 p-5 space-y-4">
+                    <div className="skeleton h-32 w-full rounded-xl" />
+                    <div className="skeleton h-4 w-3/4" />
+                    <div className="skeleton h-3 w-full" />
+                    <div className="skeleton h-3 w-2/3" />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Demand Section */}
+        {(Object.keys(demandmap).length > 0) ? (
+          <section className="mb-12 sm:mb-16">
+            <div className="mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl font-bold text-dark-text section-header">Demand in {selectedLocation.city}</h2>
+              <p className="text-xs sm:text-sm text-dark-text-secondary mt-3">Most searched property types in this area</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <DemandCard category={{ title: 'Apartments', subtitle: 'Most searched localities for Apartments' }} locations={demandData["Apartment"]} />
+              <DemandCard category={{ title: 'Villas', subtitle: 'Most searched societies for Plots' }} locations={demandData["villa"]} />
+              <DemandCard category={{ title: 'Independent House', subtitle: 'Most searched localities for Houses' }} locations={demandData["Independent House"]} />
+            </div>
+          </section>
+        ) : <></>}
+
+        {/* Our Users */}
+        <section className="mb-12 sm:mb-16">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-dark-text section-header">Our Users</h2>
+            <p className="text-xs sm:text-sm text-dark-text-secondary mt-3">One platform for everyone in real estate</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {userData.map((user, index) => (
+              <div key={user.id} className={`delay-${index + 1}`}>
+                <UserCard userType={user} />
+              </div>
             ))}
           </div>
         </section>
 
-        <section>
-          <h2 className="text-xl sm:text-2xl font-bold text-dark-text mb-4 sm:mb-6">Why Homemakers?</h2>
+        {/* Why Homemakers */}
+        <section className="mb-12 sm:mb-16">
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-dark-text section-header">Why Homemakers?</h2>
+            <p className="text-xs sm:text-sm text-dark-text-secondary mt-3">Built different, for a reason</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <FeatureCard key={feature.id} feature={feature} />
+            {features.map((feature, index) => (
+              <div key={feature.id} className={`delay-${index + 1}`}>
+                <FeatureCard feature={feature} />
+              </div>
             ))}
           </div>
         </section>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-dark-border/40 mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-dark-text-muted">© 2025 HomeMakers. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <a href="#" className="text-sm text-dark-text-muted hover:text-accent-primary transition">Privacy</a>
+            <a href="#" className="text-sm text-dark-text-muted hover:text-accent-primary transition">Terms</a>
+            <a href="#" className="text-sm text-dark-text-muted hover:text-accent-primary transition">Contact</a>
+          </div>
+        </div>
+      </footer>
+
       <ChatWidget/>
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 import Navbar from '@/components/Navbar';
 import { useState, useEffect } from 'react';
-import { User, Mail, MapPin, ArrowLeft, Calendar, Clock, ChevronDown, ChevronUp, X, Home } from 'lucide-react';
+import { User, Mail, MapPin, ArrowLeft, Calendar, Clock, ChevronDown, ChevronUp, X, Home, Shield, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react";
 import { useAppointments } from '@/context/AppointmentsContext';
@@ -74,7 +74,7 @@ export default function ProfilePage() {
 
   const statusStyles = {
     Scheduled: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-    Completed: 'bg-green-500/10 text-green-400 border-green-500/30',
+    Completed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
     Cancelled: 'bg-red-500/10 text-red-400 border-red-500/30',
   };
 
@@ -83,103 +83,123 @@ export default function ProfilePage() {
       <Navbar />
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <Link href="/dashboard" className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6">
-          <ArrowLeft size={20} />
+        <Link href="/dashboard" className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 text-sm transition">
+          <ArrowLeft size={18} />
           Back to Dashboard
         </Link>
 
         {/* Profile Card */}
-        <div className="bg-dark-bg-secondary rounded-lg shadow-dark-lg border border-dark-border p-4 sm:p-8">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mb-6 sm:mb-8 text-center sm:text-left">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center shrink-0">
-              <User size={36} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-dark-text mb-1 sm:mb-2">Your Profile</h1>
-              <p className="text-sm text-dark-text-secondary">Manage your account information</p>
-            </div>
+        <div className="bg-dark-bg-secondary rounded-2xl shadow-dark-lg border border-dark-border/60 overflow-hidden animate-in">
+          {/* Gradient banner */}
+          <div className="h-24 bg-gradient-to-r from-accent-primary via-accent-light to-accent-secondary relative">
+            <div className="absolute inset-0 bg-gradient-to-t from-dark-bg-secondary to-transparent" />
           </div>
 
-          <div className="space-y-5 border-t border-dark-border pt-5">
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-dark-text-secondary mb-1.5">Username</label>
-              <div className="p-3 bg-dark-bg-primary rounded-lg text-sm sm:text-base text-dark-text border border-dark-border">
-                {session?.user?.name || 'User Name'}
+          <div className="px-5 sm:px-8 pb-6 -mt-10 relative">
+            {/* Avatar */}
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center shadow-dark-lg border-4 border-dark-bg-secondary mb-4">
+              <User size={32} className="text-white" />
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-bold text-dark-text mb-1">Your Profile</h1>
+            <p className="text-sm text-dark-text-secondary">Manage your account information</p>
+
+            {/* Fields */}
+            <div className="space-y-4 mt-6 pt-6 border-t border-dark-border/50">
+              <div>
+                <label className="block text-xs font-medium text-dark-text-muted mb-1.5 uppercase tracking-wider">Username</label>
+                <div className="flex items-center gap-3 p-3 bg-dark-bg-primary/80 rounded-xl text-sm text-dark-text border border-dark-border/50">
+                  <User size={16} className="text-dark-text-muted" />
+                  {session?.user?.name || 'User Name'}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-dark-text-muted mb-1.5 uppercase tracking-wider">Email Address</label>
+                <div className="flex items-center gap-3 p-3 bg-dark-bg-primary/80 rounded-xl text-sm text-dark-text border border-dark-border/50">
+                  <Mail size={16} className="text-dark-text-muted" />
+                  {session?.user?.email || 'user@example.com'}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-dark-text-muted mb-1.5 uppercase tracking-wider">Account Type</label>
+                <div className="flex items-center gap-3 p-3 bg-dark-bg-primary/80 rounded-xl text-sm text-dark-text border border-dark-border/50">
+                  <Shield size={16} className="text-dark-text-muted" />
+                  {session?.user?.role || 'Role'}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-dark-text-muted mb-1.5 uppercase tracking-wider">Location</label>
+                <div className="flex items-center gap-3 p-3 bg-dark-bg-primary/80 rounded-xl text-sm text-dark-text border border-dark-border/50">
+                  <MapPin size={16} className="text-dark-text-muted" />
+                  All India
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-dark-text-secondary mb-1.5">Email Address</label>
-              <div className="flex items-center gap-3 p-3 bg-dark-bg-primary rounded-lg text-sm sm:text-base text-dark-text border border-dark-border">
-                <Mail size={18} className="text-dark-text-muted" />
-                {session?.user?.email || 'user@example.com'}
-              </div>
+            {/* Action buttons */}
+            <div className="mt-6 pt-6 border-t border-dark-border/50 flex flex-col sm:flex-row gap-3">
+              <button className="flex-1 bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2.5 px-4 rounded-xl transition shadow-dark-sm hover:shadow-glow text-sm">
+                Edit Profile
+              </button>
+              <button className="flex-1 bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold py-2.5 px-4 rounded-xl transition border border-dark-border/60 text-sm">
+                Change Password
+              </button>
             </div>
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-dark-text-secondary mb-1.5">Account Type</label>
-              <div className="p-3 bg-dark-bg-primary rounded-lg text-sm sm:text-base text-dark-text border border-dark-border">
-                {session?.user?.role || 'Role'}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-dark-text-secondary mb-1.5">Location</label>
-              <div className="flex items-center gap-3 p-3 bg-dark-bg-primary rounded-lg text-sm sm:text-base text-dark-text border border-dark-border">
-                <MapPin size={18} className="text-dark-text-muted" />
-                All India
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-dark-border flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <button className="flex-1 bg-accent-primary hover:bg-accent-dark text-white font-semibold py-2 px-4 rounded-lg transition shadow-dark-md text-sm sm:text-base">
-              Edit Profile
+            <button onClick={() => signOut()} className="w-full mt-3 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/15 text-red-400 hover:text-red-300 border border-red-500/20 font-semibold py-2.5 px-4 rounded-xl transition text-sm">
+              <LogOut size={16} />
+              Logout
             </button>
-            <button className="flex-1 bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold py-2 px-4 rounded-lg transition border border-dark-border text-sm sm:text-base">
-              Change Password
-            </button>
           </div>
-
-          <button onClick={() => signOut()} className="w-full mt-4 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 dark:bg-red-950/30 dark:hover:bg-red-950/50 dark:text-red-400 dark:hover:text-red-300 dark:border-red-900/50 font-semibold py-2 px-4 rounded-lg transition text-sm sm:text-base">
-            Logout
-          </button>
         </div>
 
         {/* My Appointments Section */}
-        <div className="bg-dark-bg-secondary rounded-lg shadow-dark-lg border border-dark-border mt-6 overflow-hidden">
+        <div className="bg-dark-bg-secondary rounded-2xl shadow-dark-lg border border-dark-border/60 mt-6 overflow-hidden animate-in delay-2">
           <button
             onClick={() => setShowAppointments(!showAppointments)}
-            className="w-full flex items-center justify-between p-6 hover:bg-dark-bg-hover transition"
+            className="w-full flex items-center justify-between p-5 hover:bg-dark-bg-hover/50 transition"
           >
             <div className="flex items-center gap-3">
-              <Calendar size={22} className="text-accent-primary" />
-              <span className="text-lg font-bold text-dark-text">View My Appointments</span>
+              <div className="w-9 h-9 rounded-xl bg-accent-primary/15 flex items-center justify-center">
+                <Calendar size={18} className="text-accent-primary" />
+              </div>
+              <span className="text-base font-bold text-dark-text">My Appointments</span>
               {appointments.length > 0 && (
-                <span className="px-2 py-0.5 bg-accent-primary/10 text-accent-primary text-xs font-semibold rounded-full border border-accent-primary/30">
+                <span className="px-2 py-0.5 bg-accent-primary/15 text-accent-primary text-xs font-bold rounded-full">
                   {appointments.length}
                 </span>
               )}
             </div>
             {showAppointments ? (
-              <ChevronUp size={20} className="text-dark-text-secondary" />
+              <ChevronUp size={18} className="text-dark-text-secondary" />
             ) : (
-              <ChevronDown size={20} className="text-dark-text-secondary" />
+              <ChevronDown size={18} className="text-dark-text-secondary" />
             )}
           </button>
 
           {showAppointments && (
-            <div className="border-t border-dark-border p-6 space-y-4">
+            <div className="border-t border-dark-border/50 p-5 space-y-3 slide-down">
               {cancelError && (
-                <div className="p-3 bg-red-950/30 border border-red-900/50 rounded-lg text-red-400 text-sm">
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
                   {cancelError}
                 </div>
               )}
 
               {loading ? (
-                <p className="text-dark-text-secondary text-center py-6">Loading appointments...</p>
+                <div className="space-y-3">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="rounded-xl border border-dark-border/40 p-4 space-y-3">
+                      <div className="skeleton h-4 w-1/3" />
+                      <div className="skeleton h-3 w-2/3" />
+                      <div className="skeleton h-3 w-1/2" />
+                    </div>
+                  ))}
+                </div>
               ) : appointments.length === 0 ? (
-                <p className="text-dark-text-secondary text-center py-6">
+                <p className="text-dark-text-secondary text-center py-6 text-sm">
                   You have no appointments yet.
                 </p>
               ) : (
@@ -191,27 +211,27 @@ export default function ProfilePage() {
                   return (
                     <div
                       key={apptKey}
-                      className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border"
+                      className="p-4 bg-dark-bg-primary/80 rounded-xl border border-dark-border/50"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <Link
                             href={`/property/${appt.property_id}`}
-                            className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-semibold transition"
+                            className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-semibold transition text-sm"
                           >
-                            <Home size={16} />
+                            <Home size={14} />
                             {appt.title ? appt.title : `Property #${appt.property_id}`}
                           </Link>
                           {(appt.city || appt.local_address) && (
-                            <p className="text-sm text-dark-text-secondary mt-1">
+                            <p className="text-xs text-dark-text-secondary mt-1">
                               {appt.local_address ? `${appt.local_address}, ` : ''}{appt.city}{appt.state ? `, ${appt.state}` : ''}
                             </p>
                           )}
-                          <p className="text-xs text-dark-text-muted mt-1">APN: {appt.property_id}</p>
+                          <p className="text-xs text-dark-text-muted mt-0.5">APN: {appt.property_id}</p>
                         </div>
 
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium border ${statusStyles[appt.status] || 'bg-dark-bg-tertiary text-dark-text-secondary border-dark-border'
+                          className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusStyles[appt.status] || 'bg-dark-bg-tertiary text-dark-text-secondary border-dark-border'
                             }`}
                         >
                           {appt.status}
@@ -220,12 +240,12 @@ export default function ProfilePage() {
 
                       <div className="grid grid-cols-2 gap-3 text-sm">
                         <div className="flex items-center gap-2 text-dark-text-secondary">
-                          <Calendar size={14} className="text-dark-text-muted" />
-                          <span>Visit: {appt.visit_date}</span>
+                          <Calendar size={13} className="text-dark-text-muted" />
+                          <span className="text-xs">Visit: {appt.visit_date}</span>
                         </div>
                         <div className="flex items-center gap-2 text-dark-text-secondary">
-                          <Clock size={14} className="text-dark-text-muted" />
-                          <span>{appt.visit_time}</span>
+                          <Clock size={13} className="text-dark-text-muted" />
+                          <span className="text-xs">{appt.visit_time}</span>
                         </div>
                         <div className="flex items-center gap-2 text-dark-text-muted text-xs col-span-2">
                           <span>Requested on {appt.issue_date} at {appt.issue_time}</span>
@@ -236,9 +256,9 @@ export default function ProfilePage() {
                         <button
                           onClick={() => handleCancelAppointment(appt)}
                           disabled={isCancelling}
-                          className="w-full mt-4 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 dark:bg-red-950/30 dark:hover:bg-red-950/50 dark:text-red-400 dark:hover:text-red-300 dark:border-red-900/50 font-medium py-2 rounded-lg transition disabled:opacity-50 text-sm"
+                          className="w-full mt-3 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/15 text-red-400 hover:text-red-300 border border-red-500/20 font-medium py-2 rounded-xl transition disabled:opacity-50 text-xs"
                         >
-                          <X size={14} />
+                          <X size={13} />
                           {isCancelling ? 'Cancelling...' : 'Cancel Appointment'}
                         </button>
                       )}
@@ -249,34 +269,45 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
+
         {/* My Listed Properties Section */}
-        <div className="bg-dark-bg-secondary rounded-lg shadow-dark-lg border border-dark-border mt-6 overflow-hidden">
+        <div className="bg-dark-bg-secondary rounded-2xl shadow-dark-lg border border-dark-border/60 mt-6 overflow-hidden animate-in delay-3">
           <button
             onClick={() => setShowMyProperties(!showMyProperties)}
-            className="w-full flex items-center justify-between p-6 hover:bg-dark-bg-hover transition"
+            className="w-full flex items-center justify-between p-5 hover:bg-dark-bg-hover/50 transition"
           >
             <div className="flex items-center gap-3">
-              <Home size={22} className="text-accent-primary" />
-              <span className="text-lg font-bold text-dark-text">My Listed Properties</span>
+              <div className="w-9 h-9 rounded-xl bg-accent-primary/15 flex items-center justify-center">
+                <Home size={18} className="text-accent-primary" />
+              </div>
+              <span className="text-base font-bold text-dark-text">My Listed Properties</span>
               {myProperties.length > 0 && (
-                <span className="px-2 py-0.5 bg-accent-primary/10 text-accent-primary text-xs font-semibold rounded-full border border-accent-primary/30">
+                <span className="px-2 py-0.5 bg-accent-primary/15 text-accent-primary text-xs font-bold rounded-full">
                   {myProperties.length}
                 </span>
               )}
             </div>
             {showMyProperties ? (
-              <ChevronUp size={20} className="text-dark-text-secondary" />
+              <ChevronUp size={18} className="text-dark-text-secondary" />
             ) : (
-              <ChevronDown size={20} className="text-dark-text-secondary" />
+              <ChevronDown size={18} className="text-dark-text-secondary" />
             )}
           </button>
 
           {showMyProperties && (
-            <div className="border-t border-dark-border p-6 space-y-4">
+            <div className="border-t border-dark-border/50 p-5 space-y-3 slide-down">
               {propertiesLoading ? (
-                <p className="text-dark-text-secondary text-center py-6">Loading your properties...</p>
+                <div className="space-y-3">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="rounded-xl border border-dark-border/40 p-4 space-y-3">
+                      <div className="skeleton h-4 w-1/3" />
+                      <div className="skeleton h-3 w-2/3" />
+                      <div className="skeleton h-3 w-1/2" />
+                    </div>
+                  ))}
+                </div>
               ) : myProperties.length === 0 ? (
-                <p className="text-dark-text-secondary text-center py-6">
+                <p className="text-dark-text-secondary text-center py-6 text-sm">
                   You haven't listed any properties yet.
                 </p>
               ) : (
@@ -286,25 +317,25 @@ export default function ProfilePage() {
                   return (
                     <div
                       key={property.apn}
-                      className="p-4 bg-dark-bg-primary rounded-lg border border-dark-border"
+                      className="p-4 bg-dark-bg-primary/80 rounded-xl border border-dark-border/50"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <Link
                             href={`/property/${property.apn}`}
-                            className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-semibold transition"
+                            className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-semibold transition text-sm"
                           >
-                            <Home size={16} />
+                            <Home size={14} />
                             {property.title}
                           </Link>
-                          <p className="text-sm text-dark-text-secondary mt-1">
+                          <p className="text-xs text-dark-text-secondary mt-1">
                             {property.city}{property.state ? `, ${property.state}` : ''}
                           </p>
-                          <p className="text-xs text-dark-text-muted mt-1">APN: {property.apn}</p>
+                          <p className="text-xs text-dark-text-muted mt-0.5">APN: {property.apn}</p>
                         </div>
 
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium border ${statusStyles[property.status] || 'bg-dark-bg-tertiary text-dark-text-secondary border-dark-border'
+                          className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusStyles[property.status] || 'bg-dark-bg-tertiary text-dark-text-secondary border-dark-border'
                             }`}
                         >
                           {property.status}
@@ -312,20 +343,20 @@ export default function ProfilePage() {
                       </div>
 
                       {/* Nested appointments */}
-                      <div className="mt-4 pt-4 border-t border-dark-border">
+                      <div className="mt-3 pt-3 border-t border-dark-border/40">
                         {!hasAppointments ? (
-                          <p className="text-dark-text-muted text-sm italic">
+                          <p className="text-dark-text-muted text-xs italic">
                             No appointments scheduled yet.
                           </p>
                         ) : (
-                          <div className="space-y-3">
-                            <p className="text-xs font-semibold text-dark-text-secondary uppercase tracking-wide">
+                          <div className="space-y-2.5">
+                            <p className="text-xs font-semibold text-dark-text-secondary uppercase tracking-wider">
                               {property.appointments.length} appointment{property.appointments.length > 1 ? 's' : ''}
                             </p>
                             {property.appointments.map((appt, idx) => (
                               <div
                                 key={`${property.apn}-${idx}`}
-                                className="p-3 bg-dark-bg-secondary rounded-lg border border-dark-border"
+                                className="p-3 bg-dark-bg-secondary rounded-xl border border-dark-border/40"
                               >
                                 <div className="flex items-start justify-between mb-2">
                                   <div>
@@ -346,11 +377,11 @@ export default function ProfilePage() {
 
                                 <div className="flex items-center gap-4 text-xs text-dark-text-secondary">
                                   <div className="flex items-center gap-1.5">
-                                    <Calendar size={12} className="text-dark-text-muted" />
+                                    <Calendar size={11} className="text-dark-text-muted" />
                                     {appt.visit_date}
                                   </div>
                                   <div className="flex items-center gap-1.5">
-                                    <Clock size={12} className="text-dark-text-muted" />
+                                    <Clock size={11} className="text-dark-text-muted" />
                                     {appt.visit_time}
                                   </div>
                                 </div>

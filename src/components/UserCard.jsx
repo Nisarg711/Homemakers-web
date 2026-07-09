@@ -1,7 +1,13 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ShoppingBag, Key, DollarSign } from 'lucide-react';
+
+const iconMap = {
+  'Buyers': ShoppingBag,
+  'Tenants': Key,
+  'Sellers': DollarSign,
+};
 
 const UserCard = ({ userType = {}, image = null }) => {
   const {
@@ -11,31 +17,30 @@ const UserCard = ({ userType = {}, image = null }) => {
     buttonText = 'Buy Now',
   } = userType;
 
+  const Icon = iconMap[title] || ShoppingBag;
+
   return (
-    <div className="relative h-60 sm:h-80 rounded-lg overflow-hidden group cursor-pointer border border-dark-border shadow-dark-lg hover:border-accent-primary/40 transition">
-      {/* Background Image Placeholder */}
-      <div className="absolute inset-0 bg-gradient-to-br from-dark-bg-tertiary via-dark-bg-secondary to-accent-primary/10 flex items-center justify-center">
-        <p className="text-dark-text-muted text-sm">Background Image</p>
-      </div>
-
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 dark:bg-black/50 dark:group-hover:bg-black/60 transition" />
-
+    <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden group cursor-pointer border border-dark-border/60 bg-dark-bg-secondary hover-lift hover:border-accent-primary transition-all animate-in">
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8">
+      <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-7">
         {/* Top Section */}
-        <div className="flex-1 flex flex-col justify-center">
-          <h3 className="text-2xl sm:text-3xl font-bold text-dark-text dark:text-white mb-2 sm:mb-3">{title}</h3>
-          <p className="text-dark-text-secondary dark:text-white/80 text-xs sm:text-sm leading-relaxed max-w-xs">
+        <div>
+          {/* Icon */}
+          <div className="w-12 h-12 rounded-xl bg-dark-bg-tertiary border border-dark-border flex items-center justify-center mb-4 text-accent-primary">
+            <Icon size={22} className="text-accent-primary" />
+          </div>
+
+          <h3 className="text-2xl font-bold text-dark-text mb-2">{title}</h3>
+          <p className="text-dark-text-secondary text-sm leading-relaxed max-w-xs">
             {description}
           </p>
         </div>
 
         {/* Bottom Section - Button */}
         <div>
-          <button className="flex items-center gap-2 text-accent-primary dark:text-accent-light hover:text-accent-dark dark:hover:text-accent-primary hover:gap-3 transition-all duration-300 group/btn">
+          <button className="flex items-center gap-2 text-accent-primary hover:text-accent-light hover:gap-3 transition-all duration-300 group/btn">
             <span className="text-sm font-semibold tracking-wide">{buttonText}</span>
-            <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+            <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

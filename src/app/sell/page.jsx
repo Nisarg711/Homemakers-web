@@ -336,35 +336,35 @@ useEffect(() => {
   };
 
   const inputClass = (field) =>
-    `w-full px-4 py-2.5 bg-dark-bg-primary border rounded-lg text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/40 transition ${
-      errors[field] ? 'border-red-500' : 'border-dark-border focus:border-accent-primary'
+    `w-full px-4 py-2.5 bg-dark-bg-primary/80 border rounded-xl text-dark-text placeholder:text-dark-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary/30 transition text-sm ${
+      errors[field] ? 'border-red-500' : 'border-dark-border/60 focus:border-accent-primary'
     }`;
 
-  const labelClass = 'block text-sm font-medium text-dark-text-secondary mb-1.5';
+  const labelClass = 'block text-xs font-medium text-dark-text-muted mb-1.5 uppercase tracking-wider';
 
   if (submitted) {
     return (
       <div className="min-h-screen bg-dark-bg">
         <Navbar />
-        <main className="max-w-2xl mx-auto px-6 py-20 text-center">
-          <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check size={32} className="text-green-400" />
+        <main className="max-w-2xl mx-auto px-6 py-20 text-center animate-in">
+          <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Check size={28} className="text-emerald-400" />
           </div>
-          <h1 className="text-3xl font-bold text-dark-text mb-3">Listing submitted</h1>
-          <p className="text-dark-text-secondary mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-dark-text mb-3 tracking-tight">Listing submitted</h1>
+          <p className="text-dark-text-secondary mb-8 text-sm">
             Your property has been added to Homemakers. It will appear in search results
             once it's reviewed.
           </p>
           <div className="flex gap-3 justify-center">
             <Link
               href="/dashboard"
-              className="px-6 py-3 bg-accent-primary hover:bg-accent-dark text-white font-semibold rounded-lg transition"
+              className="px-6 py-3 bg-accent-primary hover:bg-accent-dark text-white font-semibold rounded-xl transition text-sm hover:shadow-glow"
             >
               Back to Dashboard
             </Link>
             <button
               onClick={resetForm}
-              className="px-6 py-3 bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold rounded-lg transition border border-dark-border"
+              className="px-6 py-3 bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold rounded-xl transition border border-dark-border/60 text-sm"
             >
               List Another Property
             </button>
@@ -381,21 +381,21 @@ useEffect(() => {
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition"
+          className="flex items-center gap-2 text-accent-light hover:text-accent-primary font-medium mb-6 transition text-sm"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={18} />
           Back to Dashboard
         </Link>
 
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-dark-text mb-2">List Your Property</h1>
+        <div className="mb-6 sm:mb-8 animate-in">
+          <h1 className="text-2xl sm:text-3xl font-bold text-dark-text mb-2 tracking-tight">List Your Property</h1>
           <p className="text-sm text-dark-text-secondary">
             Fill in the details below to put your property in front of buyers and tenants.
           </p>
         </div>
 
         {/* Step Indicator */}
-        <div className="flex items-center mb-8">
+        <div className="flex items-center mb-8 animate-in delay-1">
           {STEPS.map((s, idx) => {
             const Icon = s.icon;
             const isActive = step === s.id;
@@ -404,12 +404,12 @@ useEffect(() => {
               <div key={s.id} className="flex items-center flex-1 last:flex-none">
                 <div className="flex flex-col items-center gap-2">
                   <div
-                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border-2 transition ${
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition ${
                       isComplete
-                        ? 'bg-accent-primary border-accent-primary text-white'
+                        ? 'bg-accent-primary text-white shadow-glow'
                         : isActive
-                        ? 'border-accent-primary text-accent-primary bg-accent-primary/10'
-                        : 'border-dark-border text-dark-text-muted'
+                        ? 'bg-accent-primary/15 text-accent-primary border-2 border-accent-primary/40'
+                        : 'bg-dark-bg-tertiary text-dark-text-muted border border-dark-border/40'
                     }`}
                   >
                     {isComplete ? <Check size={16} /> : <Icon size={16} />}
@@ -424,8 +424,8 @@ useEffect(() => {
                 </div>
                 {idx < STEPS.length - 1 && (
                   <div
-                    className={`flex-1 h-0.5 mx-1 sm:mx-2 transition ${
-                      isComplete ? 'bg-accent-primary' : 'bg-dark-border'
+                    className={`flex-1 h-0.5 mx-1 sm:mx-2 rounded-full transition ${
+                      isComplete ? 'bg-accent-primary' : 'bg-dark-border/40'
                     }`}
                   />
                 )}
@@ -435,7 +435,7 @@ useEffect(() => {
         </div>
 
         {/* Form Card */}
-        <div className="bg-dark-bg-secondary rounded-lg border border-dark-border shadow-dark-lg p-4 sm:p-8">
+        <div className="bg-dark-bg-secondary rounded-2xl border border-dark-border/60 shadow-dark-lg p-5 sm:p-8 animate-in delay-2">
           {/* Step 1 — Property Basics */}
           {step === 1 && (
             <div className="space-y-5">
@@ -445,7 +445,7 @@ useEffect(() => {
               <div>
                 <label className={labelClass}>Property APN</label>
                 <div className="relative">
-                  <Hash size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-text-muted" />
+                  <Hash size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dark-text-muted" />
                   <input
                     type="text"
                     value={formData.apn}
@@ -552,10 +552,10 @@ useEffect(() => {
                 />
               </div>
 
-              <div className="pt-2 border-t border-dark-border">
+              <div className="pt-2 border-t border-dark-border/40">
                 <label className={labelClass}>Agent Licence Number (optional)</label>
                 <div className="relative">
-                  <UserCheck size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-text-muted" />
+                  <UserCheck size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dark-text-muted" />
                   <input
                     type="text"
                     value={formData.agentLcNo}
@@ -564,18 +564,18 @@ useEffect(() => {
                     className={inputClass('agentLcNo') + ' pl-9 pr-9'}
                   />
                   {agentCheckStatus === 'checking' && (
-                    <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-text-muted animate-spin" />
+                    <Loader2 size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-dark-text-muted animate-spin" />
                   )}
                   {agentCheckStatus === 'valid' && (
-                    <CheckCircle2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-green-400" />
+                    <CheckCircle2 size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-emerald-400" />
                   )}
                   {agentCheckStatus === 'invalid' && (
-                    <AlertCircle size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400" />
+                    <AlertCircle size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-red-400" />
                   )}
                 </div>
 
                 {agentCheckStatus === 'valid' && agentName && (
-                  <p className="text-green-400 text-xs mt-1.5 flex items-center gap-1">
+                  <p className="text-emerald-400 text-xs mt-1.5 flex items-center gap-1">
                     <CheckCircle2 size={12} />
                     Agent verified: {agentName}
                   </p>
@@ -677,7 +677,7 @@ useEffect(() => {
                 />
               </div>
 
-              <div className="pt-2 border-t border-dark-border">
+              <div className="pt-2 border-t border-dark-border/40">
                 <label className="flex items-center gap-3 cursor-pointer py-2">
                   <input
                     type="checkbox"
@@ -685,18 +685,18 @@ useEffect(() => {
                     onChange={(e) => updateField('partOfSociety', e.target.checked)}
                     className="w-4 h-4 rounded border-dark-border accent-accent-primary"
                   />
-                  <span className="text-dark-text flex items-center gap-2">
-                    <Building2 size={16} className="text-dark-text-muted" />
+                  <span className="text-dark-text flex items-center gap-2 text-sm">
+                    <Building2 size={15} className="text-dark-text-muted" />
                     This property is part of a housing society
                   </span>
                 </label>
 
                 {formData.partOfSociety && (
-                  <div className="mt-4 space-y-4">
+                  <div className="mt-4 space-y-4 slide-down">
                     <div>
                       <label className={labelClass}>Society Registration Number</label>
                       <div className="relative">
-                        <Hash size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-text-muted" />
+                        <Hash size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dark-text-muted" />
                         <input
                           type="text"
                           value={formData.societyRegNo}
@@ -705,13 +705,13 @@ useEffect(() => {
                           className={inputClass('societyRegNo') + ' pl-9 pr-9'}
                         />
                         {societyCheckStatus === 'checking' && (
-                          <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-text-muted animate-spin" />
+                          <Loader2 size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-dark-text-muted animate-spin" />
                         )}
                         {societyCheckStatus === 'valid' && (
-                          <CheckCircle2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-green-400" />
+                          <CheckCircle2 size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-emerald-400" />
                         )}
                         {societyCheckStatus === 'invalid' && (
-                          <AlertCircle size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400" />
+                          <AlertCircle size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-red-400" />
                         )}
                       </div>
                       <p className="text-dark-text-muted text-xs mt-1">
@@ -720,7 +720,7 @@ useEffect(() => {
                       {errors.societyRegNo && <p className="text-red-400 text-xs mt-1">{errors.societyRegNo}</p>}
 
                       {societyCheckStatus === 'valid' && societyFoundName && (
-                        <p className="text-green-400 text-xs mt-1.5 flex items-center gap-1">
+                        <p className="text-emerald-400 text-xs mt-1.5 flex items-center gap-1">
                           <CheckCircle2 size={12} />
                           Society found: {societyFoundName}
                         </p>
@@ -823,16 +823,16 @@ useEffect(() => {
                         key={amenity}
                         type="button"
                         onClick={() => toggleAmenity(amenity, 'amenities')}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm text-left transition ${
+                        className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm text-left transition ${
                           selected
-                            ? 'bg-accent-primary/10 border-accent-primary text-accent-primary'
-                            : 'bg-dark-bg-primary border-dark-border text-dark-text-secondary hover:border-accent-primary/50'
+                            ? 'bg-accent-primary/10 border-accent-primary/40 text-accent-primary'
+                            : 'bg-dark-bg-primary/80 border-dark-border/40 text-dark-text-secondary hover:border-accent-primary/30'
                         }`}
                       >
                         <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                          selected ? 'bg-accent-primary border-accent-primary' : 'border-dark-border'
+                          selected ? 'bg-accent-primary border-accent-primary' : 'border-dark-border/60'
                         }`}>
-                          {selected && <Check size={12} className="text-white" />}
+                          {selected && <Check size={10} className="text-white" />}
                         </span>
                         {amenity}
                       </button>
@@ -842,7 +842,7 @@ useEffect(() => {
               </div>
 
               {formData.partOfSociety && (
-                <div className="pt-4 border-t border-dark-border">
+                <div className="pt-4 border-t border-dark-border/40">
                   <h3 className="text-sm font-semibold text-dark-text mb-2">
                     Shared Society Amenities
                   </h3>
@@ -857,16 +857,16 @@ useEffect(() => {
                           key={`shared-${amenity}`}
                           type="button"
                           onClick={() => toggleAmenity(amenity, 'sharedAmenities')}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm text-left transition ${
+                          className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm text-left transition ${
                             selected
-                              ? 'bg-accent-secondary/10 border-accent-secondary text-accent-secondary'
-                              : 'bg-dark-bg-primary border-dark-border text-dark-text-secondary hover:border-accent-secondary/50'
+                              ? 'bg-accent-secondary/10 border-accent-secondary/40 text-accent-secondary'
+                              : 'bg-dark-bg-primary/80 border-dark-border/40 text-dark-text-secondary hover:border-accent-secondary/30'
                           }`}
                         >
                           <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
-                            selected ? 'bg-accent-secondary border-accent-secondary' : 'border-dark-border'
+                            selected ? 'bg-accent-secondary border-accent-secondary' : 'border-dark-border/60'
                           }`}>
-                            {selected && <Check size={12} className="text-white" />}
+                            {selected && <Check size={10} className="text-white" />}
                           </span>
                           {amenity}
                         </button>
@@ -890,7 +890,7 @@ useEffect(() => {
                 {formData.imageUrls.map((url, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <div className="flex-1 relative">
-                      <ImageIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-text-muted" />
+                      <ImageIcon size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-dark-text-muted" />
                       <input
                         type="url"
                         value={url}
@@ -903,9 +903,9 @@ useEffect(() => {
                       <button
                         type="button"
                         onClick={() => removeImageField(idx)}
-                        className="p-2.5 rounded-lg border border-dark-border text-dark-text-muted hover:text-red-400 hover:border-red-500/50 transition"
+                        className="p-2.5 rounded-xl border border-dark-border/40 text-dark-text-muted hover:text-red-400 hover:border-red-500/40 transition"
                       >
-                        <X size={16} />
+                        <X size={14} />
                       </button>
                     )}
                   </div>
@@ -917,13 +917,13 @@ useEffect(() => {
                   onClick={addImageField}
                   className="flex items-center gap-2 text-sm text-accent-light hover:text-accent-primary font-medium transition"
                 >
-                  <Plus size={16} />
+                  <Plus size={14} />
                   Add another photo
                 </button>
               </div>
 
               {submitError && (
-                <div className="p-3 bg-red-950/30 border border-red-900/50 rounded-lg text-red-400 text-sm">
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
                   {submitError}
                 </div>
               )}
@@ -931,14 +931,14 @@ useEffect(() => {
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex gap-3 pt-8 mt-2 border-t border-dark-border">
+          <div className="flex gap-3 pt-8 mt-2 border-t border-dark-border/40">
             {step > 1 && (
               <button
                 type="button"
                 onClick={goBack}
-                className="flex items-center gap-2 px-5 py-2.5 bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold rounded-lg transition border border-dark-border"
+                className="flex items-center gap-2 px-5 py-2.5 bg-dark-bg-tertiary hover:bg-dark-bg-hover text-dark-text font-semibold rounded-xl transition border border-dark-border/60 text-sm"
               >
-                <ArrowLeft size={16} />
+                <ArrowLeft size={14} />
                 Back
               </button>
             )}
@@ -949,26 +949,26 @@ useEffect(() => {
               <button
                 type="button"
                 onClick={goNext}
-                className="flex items-center gap-2 px-6 py-2.5 bg-accent-primary hover:bg-accent-dark text-white font-semibold rounded-lg transition shadow-dark-md"
+                className="flex items-center gap-2 px-6 py-2.5 bg-accent-primary hover:bg-accent-dark text-white font-semibold rounded-xl transition shadow-dark-sm hover:shadow-glow text-sm"
               >
                 Next
-                <ArrowRight size={16} />
+                <ArrowRight size={14} />
               </button>
             ) : (
               <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="flex items-center gap-2 px-6 py-2.5 bg-accent-primary hover:bg-accent-dark text-white font-semibold rounded-lg transition shadow-dark-md disabled:opacity-60"
+                className="flex items-center gap-2 px-6 py-2.5 bg-accent-primary hover:bg-accent-dark text-white font-semibold rounded-xl transition shadow-dark-sm hover:shadow-glow disabled:opacity-60 text-sm"
               >
                 {submitting ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" />
+                    <Loader2 size={14} className="animate-spin" />
                     Submitting...
                   </>
                 ) : (
                   <>
-                    <Check size={16} />
+                    <Check size={14} />
                     Submit Listing
                   </>
                 )}
